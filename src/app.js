@@ -7,6 +7,7 @@ import rateLimit from "express-rate-limit";
 import indexRoutes from "./routes/index.routes.js";
 import productsRoutes from "./routes/products.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import reviewsRoutes from "./routes/review.routes.js";
 
 import { notFound } from "./middlewares/notFound.middleware.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
@@ -43,6 +44,7 @@ app.use(cookieParser());
 app.use("/", indexRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/auth", authRoutes);
+app.use("api/reviews", reviewsRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
