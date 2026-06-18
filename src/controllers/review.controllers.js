@@ -1,41 +1,55 @@
 import * as reviewService from "../services/review.service.js";
+import { isString } from "../utils/common.utils.js";
 
-export const getReviews = async (req, res) => {
-  const reviews = await reviewService.getReviews();
-  res.json({
+export const getReviewByUser = async (req, res, next) => {
+  const { id } = res.locals;
+  const result = await reviewService.getReviewByUser(id);
+
+  return res.status(200).json({
     ok: true,
-    data: reviews,
+    data: result.content,
   });
 };
 
-export const getReview = async (req, res) => {
-  const reviews = await reviewService.getReviewById(req.params.id);
-  res.json({
+export const createReview = async (req, res, next) => {
+  const { productId, rating, comment } = req.body;
+  const { id } = res.locals;
+
+  const result = await reviewService.createReview(isString(id), productId, rating, comment);
+
+  if (!result.ok) return next(new Error("No se pudo crear la review"));
+
+  return res.status(201).json({
     ok: true,
-    data: reviews,
+    data: result.content,
   });
 };
 
-export const createReview = async (req, res) => {
-  const review = await reviewService.createReview(req.body);
-  res.status(201).json({
+export const updateReview = async (req, res, next) => {
+  const { rating, comment } = req.body;
+  const { id } = res.locals;
+  const { productId } = req.params;
+
+  const result = await reviewService.updateReview(isString(id), productId, { rating, comment });
+
+  if (!result.ok) return next(new Error("No se pudo actualizar la review"));
+
+  return res.json({
     ok: true,
-    data: review,
+    data: result.content,
   });
 };
 
-export const updateReview = async (req, res) => {
-  const review = await reviewService.updateReview(req.params.id, req.body);
-  res.json({
-    ok: true,
-    data: review,
-  });
-};
+export const deleteReview = async (req, res, next) => {
+  const { productId } = req.params;
+  const { id } = res.locals;
 
-export const deleteReview = async (req, res) => {
-  const review = await reviewService.deleteReview(req.params.id);
-  res.json({
+  const result = await reviewService.deleteReview(isString(id), productId);
+
+  if (!result.ok) return next(new Error("No se pudo eliminar la review"));
+
+  return res.json({
     ok: true,
-    data: review,
+    data: result.content,
   });
 };

@@ -1,10 +1,10 @@
 // Se ejecuta antes del controller en la ruta POST /api/products
 // Verifica que el body contenga los campos obligatorios
 
-const createProduct = (req, res, next) => {
+export const createProduct = (req, res, next) => {
   const { name, price } = req.body;
 
-  if (!name || price === undefined || price < 0) {
+  if (!name || !price || price < 0) {
     // Comprobamos que como minimo tenga nombre y precio igual o mayor a 0
     return res.status(400).json({
       ok: false,
@@ -17,27 +17,27 @@ const createProduct = (req, res, next) => {
   next();
 };
 
-const updateProduct = (req, res, next) => {
+export const updateProduct = (req, res, next) => {
   const { name, description, price, stock, imageUrl } = req.body; // Obtenemos todos los elementos del body pasados por el usuario
 
   if (
     // Comprobamos que haya almenos algun elemento nuevo para actualizar el producto
-    name === undefined &&
-    description === undefined &&
-    price === undefined &&
-    stock === undefined &&
-    imageUrl === undefined
+    !name &&
+    !description &&
+    !price &&
+    !stock &&
+    !imageUrl
   ) {
     return res.status(400).json({
       ok: false,
-      error: { message: "Debes enviar al menos un campo para actualizar" },
+      error: { message: "Debes completar algun campo para actualizar" },
     });
   }
 
   next();
 };
 
-const createUser = (req, res, next) => {
+export const createUser = (req, res, next) => {
   const { email, password, role } = req.body;
 
   if (!email || !password) {
@@ -50,7 +50,7 @@ const createUser = (req, res, next) => {
   next();
 };
 
-const loginOneUser = (req, res, next) => {
+export const loginOneUser = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -63,9 +63,41 @@ const loginOneUser = (req, res, next) => {
   next();
 };
 
-export const validate = {
-  updateProduct,
-  createProduct,
-  createUser,
-  loginOneUser,
+export const updateUser = (req, res, next) => {
+  const { role } = req.body;
+
+  if (!role) {
+    return res.status(400).json({
+      ok: false,
+      error: { message: "Debes ingresar el rol" },
+    });
+  }
+
+  next();
+};
+
+export const createReview = (req, res, next) => {
+  const { productId, rating, comment } = req.body;
+
+  if (!rating || !productId) {
+    return res.status(400).json({
+      ok: false,
+      error: { message: "Debes ingresar el rating y el productId" },
+    });
+  }
+
+  next();
+};
+
+export const updateReview = (req, res, next) => {
+  const { rating, comment } = req.body;
+
+  if (!rating && !comment) {
+    return res.status(400).json({
+      ok: false,
+      error: { message: "Debes ingresar el rating o el comentario para actualizar" },
+    });
+  }
+
+  next();
 };

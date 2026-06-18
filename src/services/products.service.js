@@ -1,37 +1,42 @@
 import prisma from "../config/prismaClient.js";
 
-const getAllProducts = () => {
-  return prisma.product.findMany();
+export const getAllProducts = async (productsIds) => {
+  try {
+    return {
+      ok: true,
+      content: await prisma.product.findMany({
+        omit: { createdAt: true },
+        where: { id: { in: productsIds } },
+      }),
+    };
+  } catch (error) {
+    console.log("Error obteniendo todos los productos", error.message);
+    return {
+      ok: false,
+      content: [],
+    };
+  }
 };
 
-const getProductById = (id) => {
+export const getProductById = (id) => {
   return prisma.product.findUnique({
     where: { id },
   });
 };
 
-const createProduct = (data) => {
+export const createProduct = (data) => {
   return prisma.product.create({ data });
 };
 
-const updateProduct = (id, data) => {
+export const updateProduct = (id, data) => {
   return prisma.product.update({
     where: { id },
     data,
   });
 };
 
-const deleteProduct = (id) => {
+export const deleteProduct = (id) => {
   return prisma.product.delete({
     where: { id },
   });
-};
-
-export const productsService = {
-  // Exportamos todas las funciones como un unico objeto
-  getAllProducts,
-  getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct,
 };

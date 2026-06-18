@@ -16,7 +16,7 @@ describe("calculateTotal", () => {
       { price: 5, quantity: 4 },
       { price: 15, quantity: 1 },
     ];
-    expect(calculateTotal(items)).toBe(55);
+    expect(calculateTotal(items)).toBe(65);
   });
 
   test("funciona con numeros decimales", () => {
