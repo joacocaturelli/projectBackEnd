@@ -2,6 +2,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./config/swagger.js";
 
 import indexRoutes from "./routes/index.routes.js";
 import productsRoutes from "./routes/products.routes.js";
@@ -32,7 +34,8 @@ app.use(express.json()); // Para leer los datos del body
 app.use(express.urlencoded({ extended: true })); // Para leer los datos del body en formato urlencode
 app.use(cookieParser());
 app.use(limiter);
-//app.use(adminLogger);
+
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/", indexRoutes);
 app.use("/api/products", productsRoutes);
