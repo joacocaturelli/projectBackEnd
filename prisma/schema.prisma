@@ -10,7 +10,7 @@ model Product {
   id            Int         @id @default(autoincrement())
   name          String
   description   String?
-  price         Float
+  price         Decimal     @db.Decimal(10,2)
   stock         Int?
   imageUrl      String?     @map("image_url")
   createdAt     DateTime    @default(now()) @map("created_at")
@@ -26,4 +26,39 @@ model User {
   createdAt     DateTime    @default(now()) @map("created_at")
 
   @@map("users")
+}
+
+model Cart {
+  id            String      @id @default(uuid())
+  userId        String      @map("user_id")
+  status        CartStatus  @default(ACTIVE)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  items         CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id            String      @id @default(uuid())
+  cartId        String      @map("cart_id")
+  productId     String      @map("product_id")
+  quantity      Int
+
+  cart Cart @relation(fields: [cartId], references: [id])  
+
+  @@map("cart_items")
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  userId        String      @map("user_id")
+  total         Float
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  @@map("orders")
+}
+
+enum CartStatus {
+  ACTIVE
+  CHECKED_OUT
 }
