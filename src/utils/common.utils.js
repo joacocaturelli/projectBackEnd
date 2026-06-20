@@ -2,7 +2,7 @@ import rateLimit from "express-rate-limit";
 
 export const cookieOptions = {
   httpOnly: true,
-  secure: false, // true en produccion
+  secure: process.env.NODE_ENV === "production",
   maxAge: 3_600_000, // 1 hora
 };
 
