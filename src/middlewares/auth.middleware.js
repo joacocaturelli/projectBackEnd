@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { isString } from "../utils/common.utils.js";
 
 export const authMiddleware = (req, res, next) => {
   const token = req.cookies.token;
@@ -16,7 +17,7 @@ export const authMiddleware = (req, res, next) => {
     const { id, email, role } = user;
     res.locals.email = email;
     res.locals.role = role;
-    res.locals.id = id;
+    res.locals.id = isString(id);
 
     next();
   } catch (error) {

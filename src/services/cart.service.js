@@ -69,7 +69,7 @@ export const checkOut = async (userId) => {
   // Obtenemos el precio total del carrito
   for (const item of cart.items) {
     const product = await prisma.product.findUnique({
-      where: { id: item.productId },
+      where: { id: Number(item.productId) },
     });
 
     total += product.price * item.quantity;
