@@ -11,6 +11,7 @@ import authRoutes from "./routes/auth.routes.js";
 import reviewsRoutes from "./routes/review.routes.js";
 import userRoutes from "./routes/users.routes.js";
 import wishListRoutes from "./routes/wishlist.routes.js";
+import cartRoutes from "./routes/cart.routes.js";
 
 import { notFound } from "./middlewares/notFound.middleware.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
@@ -43,6 +44,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/reviews", reviewsRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/wishlist", wishListRoutes);
+app.use("api/cart", cartRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
