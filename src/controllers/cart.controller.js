@@ -72,9 +72,6 @@ export const checkOut = async (req, res, next) => {
       data: result,
     });
   } catch (error) {
-    console.log("Error:", error.message);
-    return {
-      ok: false,
-    };
+    next(error);
   }
 };
