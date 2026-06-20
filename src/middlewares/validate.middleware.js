@@ -1,5 +1,4 @@
-// Se ejecuta antes del controller en la ruta POST /api/products
-// Verifica que el body contenga los campos obligatorios
+import prisma from "../config/prismaClient.js";
 
 export const createProduct = (req, res, next) => {
   const { name, price } = req.body;
@@ -76,13 +75,26 @@ export const updateUser = (req, res, next) => {
   next();
 };
 
-export const createReview = (req, res, next) => {
+export const createReview = async (req, res, next) => {
   const { productId, rating, comment } = req.body;
 
   if (!rating || !productId) {
     return res.status(400).json({
       ok: false,
       error: { message: "Debes ingresar el rating y el productId" },
+    });
+  }
+
+  // Comprobamos que el producto exista en la base de datos
+  const id = Number(productId);
+  const result = await prisma.product.findUnique({
+    where: { id },
+  });
+
+  if (!result) {
+    return res.status(404).json({
+      ok: false,
+      error: { message: "Producto no encontrado" },
     });
   }
 
