@@ -64,16 +64,16 @@ export const checkOut = async (userId) => {
     throw new Error("El carrito esta vacio");
   }
 
-  let total = 0;
+  // Obtenemos el precio total del carrito (Recomendado por chatGPT)
+  const productIds = cart.items.map((item) => Number(item.productId));
 
-  // Obtenemos el precio total del carrito
-  for (const item of cart.items) {
-    const product = await prisma.product.findUnique({
-      where: { id: Number(item.productId) },
-    });
+  const products = await prisma.product.findMany({
+    where: { id: { in: productIds } },
+  });
 
-    total += product.price * item.quantity;
-  }
+  const productsPrice = Object.fromEntries(products.map((p) => [p.id, p.price]));
+
+  const total = cart.items.reduce((sum, item) => sum + productsPrice[Number(item.productId)] * item.quantity, 0);
 
   // Creamos la orden
   const order = await prisma.order.create({

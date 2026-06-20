@@ -23,7 +23,6 @@ export const getAllUsers = async () => {
   try {
     const users = await prisma.user.findMany({
       omit: {
-        id: true,
         password: true,
       },
     });
@@ -53,6 +52,7 @@ export const getUserById = (id) => {
 export const updateUser = (id, data) => {
   return prisma.user.update({
     where: { id },
+    omit: { password: true },
     data,
   });
 };
@@ -60,5 +60,6 @@ export const updateUser = (id, data) => {
 export const deleteUser = (id) => {
   return prisma.user.delete({
     where: { id },
+    omit: { password: true },
   });
 };
