@@ -22,10 +22,11 @@ export const getWishlistByUser = async (userId) => {
 
 export const addToWishlist = async (userId, productId) => {
   try {
-    await Wishlist.create({ userId, productId });
+    const result = await Wishlist.create({ userId, productId });
 
     return {
       ok: true,
+      content: result,
     };
   } catch (error) {
     console.log("Error saving into wishlist", error.message);

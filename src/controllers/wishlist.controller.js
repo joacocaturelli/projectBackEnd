@@ -15,15 +15,16 @@ export const getWishlistByUser = async (req, res, next) => {
 };
 
 export const addToWishlist = async (req, res, next) => {
-  const { product } = req.body;
+  const productId = req.params.productId;
   const { id } = res.locals;
 
-  const result = await wishlistService.addToWishlist(isString(id), product);
+  const result = await wishlistService.addToWishlist(isString(id), productId);
 
   if (!result.ok) return next(new Error("No se pudo añadir a la wishlist"));
 
   return res.status(201).json({
     ok: true,
+    data: result.content,
   });
 };
 
