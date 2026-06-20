@@ -101,3 +101,16 @@ export const updateReview = (req, res, next) => {
 
   next();
 };
+
+export const addItem = (req, res, next) => {
+  const { productId, quantity } = req.body;
+
+  if (!productId || !quantity) {
+    return res.status(400).json({
+      ok: false,
+      error: { message: "Debes ingresar el Id del producto y la cantidad para añadirlo al carrito" },
+    });
+  }
+
+  next();
+};
