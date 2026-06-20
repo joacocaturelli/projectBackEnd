@@ -15,7 +15,6 @@ import cartRoutes from "./routes/cart.routes.js";
 
 import { notFound } from "./middlewares/notFound.middleware.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
-import { adminLogger } from "./middlewares/adminLogger.middleware.js";
 import { limiter } from "./utils/common.utils.js";
 
 const app = express();
