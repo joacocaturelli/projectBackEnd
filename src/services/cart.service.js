@@ -1,4 +1,4 @@
-import prisma from "../config/prismaClient";
+import prisma from "../config/prismaClient.js";
 
 // Obtenemos el carrito active del user y si no tiene se lo creamos
 export const getCart = async (userId) => {
