@@ -7,7 +7,7 @@ const router = express.Router();
 
 /**
  * @openapi
- * /auth/register:
+ * /api/auth/register:
  *   post:
  *     summary: Registrar un nuevo usuario
  *     tags:
@@ -38,7 +38,7 @@ router.post("/register", validate.createUser, authController.register);
 
 /**
  * @openapi
- * /auth/login:
+ * /api/auth/login:
  *   post:
  *     summary: Login de usuario
  *     tags:
@@ -67,7 +67,7 @@ router.post("/login", validate.loginOneUser, authController.login);
 
 /**
  * @openapi
- * /auth/logout:
+ * /api/auth/logout:
  *   post:
  *     summary: Cerrar sesión
  *     tags:
