@@ -18,6 +18,23 @@ export const getReviewByUser = async (userId) => {
   }
 };
 
+export const getReviewByProduct = async (productId) => {
+  try {
+    const result = await Review.find({ productId }, { productId: true, rating: true, comment: true, _id: false });
+
+    return {
+      ok: true,
+      content: result,
+    };
+  } catch (error) {
+    console.log("Error al obtener las reviews del producto", error.message);
+    return {
+      ok: false,
+      content: [],
+    };
+  }
+};
+
 export const createReview = async (userId, productId, rating, comment) => {
   try {
     const result = await Review.create({ userId, productId, rating, comment });

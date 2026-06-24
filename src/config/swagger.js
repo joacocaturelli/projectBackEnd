@@ -165,6 +165,15 @@ export const swaggerSpec = swaggerJSDoc({
           },
         },
 
+        ReviewCreatebyProduct: {
+          type: "object",
+          required: ["rating"],
+          properties: {
+            rating: { type: "integer", minimum: 1, maximum: 5 },
+            comment: { type: "string" },
+          },
+        },
+
         ReviewPut: {
           type: "object",
           required: ["productId", "rating"],

@@ -3,6 +3,7 @@ import * as productsController from "../controllers/products.controller.js"; //I
 import * as validate from "../middlewares/validate.middleware.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { requiredRole } from "../middlewares/requireRole.middleware.js";
+import { getReviewByProduct, createReviewByProduct } from "../controllers/review.controllers.js";
 
 const router = express.Router(); //Creamos el router con la propiedad Router() de express
 
@@ -51,6 +52,58 @@ router.get("/", authMiddleware, productsController.getProducts);
  *               $ref: "#/components/schemas/Product"
  */
 router.get("/:id", authMiddleware, productsController.getProduct);
+
+/**
+ * @openapi
+ * /api/products/{productId}/reviews:
+ *   get:
+ *     summary: Obtener reviews por producto
+ *     tags:
+ *       - Reviews
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/Review"
+ */
+router.get("/:productId/reviews", authMiddleware, getReviewByProduct);
+
+/**
+ * @openapi
+ * /api/products/{productId}/reviews:
+ *   post:
+ *     summary: Crear review por producto
+ *     tags:
+ *       - Reviews
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/ReviewCreatebyProduct"
+ *     responses:
+ *       201:
+ *         description: Review creada
+ */
+router.post("/:productId/reviews", authMiddleware, createReviewByProduct);
 
 /**
  * @openapi

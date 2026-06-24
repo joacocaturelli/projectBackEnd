@@ -11,6 +11,30 @@ export const getReviewByUser = async (req, res, next) => {
   });
 };
 
+export const getReviewByProduct = async (req, res, next) => {
+  const result = await reviewService.getReviewByProduct(req.params.productId);
+
+  return res.status(200).json({
+    ok: true,
+    data: result.content,
+  });
+};
+
+export const createReviewByProduct = async (req, res, next) => {
+  const productId = req.params.productId;
+  const { rating, comment } = req.body;
+  const { id } = res.locals;
+
+  const result = await reviewService.createReview(isString(id), productId, rating, comment);
+
+  if (!result.ok) return next(new Error("No se pudo crear la review"));
+
+  return res.status(201).json({
+    ok: true,
+    data: result.content,
+  });
+};
+
 export const createReview = async (req, res, next) => {
   const { productId, rating, comment } = req.body;
   const { id } = res.locals;
