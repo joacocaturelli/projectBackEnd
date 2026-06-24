@@ -22,7 +22,7 @@ model User {
   id            Int         @id @default(autoincrement())
   email         String      @unique
   password      String
-  role          String      @default("USER")
+  role          Role        @default("USER")
   createdAt     DateTime    @default(now()) @map("created_at")
 
   @@map("users")
@@ -61,4 +61,9 @@ model Order {
 enum CartStatus {
   ACTIVE
   CHECKED_OUT
+}
+
+enum Role {
+  USER
+  ADMIN
 }
