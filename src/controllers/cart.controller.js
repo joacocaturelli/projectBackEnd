@@ -1,4 +1,6 @@
 import * as cartService from "../services/cart.service.js";
+import { needNumber } from "../utils/common.utils.js";
+import { Selector } from "../utils/errors.utils.js";
 
 export const getCart = async (req, res, next) => {
   try {
@@ -42,6 +44,10 @@ export const addItem = async (req, res, next) => {
   try {
     const { productId, quantity } = req.body;
     const { id } = res.locals;
+
+    const resultQuantity = needNumber(quantity);
+
+    if (!resultQuantity.ok) return next(Selector.BAD_INPUT);
 
     const result = await cartService.addItem(id, productId, quantity);
 
