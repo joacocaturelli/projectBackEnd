@@ -1,11 +1,6 @@
-// Se registra al final de app.js (despues de las rutas)
-// Recibe errores propagados con next(error) desde cualquier controller
+import CustomError from "../utils/errors.utils.js";
 
-export const errorHandler = (error, req, res, next) => {
-  console.error("Error: ", error.message);
-  const status = error.status || 500;
-  res.status(status).json({
-    ok: false,
-    error: { message: error.message || "Internal server error" },
-  });
+export default (error, req, res, next) => {
+  if (!(error instanceof CustomError)) return next(new CustomError(error));
+  return next(error);
 };
