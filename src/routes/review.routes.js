@@ -45,7 +45,7 @@ router.get("/", authMiddleware, reviewController.getReviewByUser);
  *       201:
  *         description: Review creada
  */
-router.post("/", authMiddleware, validate.createReview, reviewController.createReview);
+router.post("/", authMiddleware, validate.obligatory(["rating", "productId"]), reviewController.createReview);
 
 /**
  * @openapi
@@ -76,7 +76,7 @@ router.post("/", authMiddleware, validate.createReview, reviewController.createR
  *             schema:
  *               $ref: "#/components/schemas/Review"
  */
-router.put("/:productId", authMiddleware, validate.updateReview, reviewController.updateReview);
+router.put("/:productId", authMiddleware, validate.necessaryOne(["rating", "comment"]), reviewController.updateReview);
 
 /**
  * @openapi

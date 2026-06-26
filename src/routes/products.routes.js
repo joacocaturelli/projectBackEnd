@@ -126,7 +126,13 @@ router.post("/:productId/reviews", authMiddleware, createReviewByProduct);
  *     x-roles:
  *       - ADMIN
  */
-router.post("/", authMiddleware, requiredRole, validate.createProduct, productsController.createOneProduct);
+router.post(
+  "/",
+  authMiddleware,
+  requiredRole,
+  validate.obligatory(["name", "price"]),
+  productsController.createOneProduct,
+);
 
 /**
  * @openapi
@@ -157,7 +163,13 @@ router.post("/", authMiddleware, requiredRole, validate.createProduct, productsC
  *             schema:
  *               $ref: "#/components/schemas/Product"
  */
-router.put("/:id", authMiddleware, requiredRole, validate.updateProduct, productsController.updateOneProduct);
+router.put(
+  "/:id",
+  authMiddleware,
+  requiredRole,
+  validate.necessaryOne(["name", "description", "price", "stock", "imageUrl"]),
+  productsController.updateOneProduct,
+);
 
 /**
  * @openapi

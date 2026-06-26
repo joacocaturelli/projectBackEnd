@@ -106,7 +106,7 @@ router.get("/:id", authMiddleware, requiredRole, userControllers.getUserById);
  *     x-roles:
  *       - ADMIN
  */
-router.put("/:id", authMiddleware, requiredRole, validate.updateUser, userControllers.updateUser);
+router.put("/:id", authMiddleware, requiredRole, validate.obligatory(["role"]), userControllers.updateUser);
 
 /**
  * @openapi

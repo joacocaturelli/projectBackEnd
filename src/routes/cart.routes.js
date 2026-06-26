@@ -72,7 +72,7 @@ router.get("/:cartId", authMiddleware, cartController.getCartById);
  *             schema:
  *               $ref: "#/components/schemas/Cart"
  */
-router.post("/items", authMiddleware, validate.addItem, cartController.addItem);
+router.post("/items", authMiddleware, validate.obligatory(["productId", "quantity"]), cartController.addItem);
 
 /**
  * @openapi

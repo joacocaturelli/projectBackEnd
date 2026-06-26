@@ -34,7 +34,7 @@ const router = express.Router();
  *       400:
  *         description: Error de validación
  */
-router.post("/register", validate.createUser, authController.register);
+router.post("/register", validate.obligatory(["email", "password"]), authController.register);
 
 /**
  * @openapi
@@ -63,7 +63,7 @@ router.post("/register", validate.createUser, authController.register);
  *       401:
  *         description: Credenciales inválidas
  */
-router.post("/login", validate.loginOneUser, authController.login);
+router.post("/login", validate.obligatory(["email", "password"]), authController.login);
 
 /**
  * @openapi
