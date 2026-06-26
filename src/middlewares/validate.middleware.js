@@ -1,128 +1,48 @@
 import prisma from "../config/prismaClient.js";
+import { Selector } from "../utils/errors.utils.js";
+import { isNumber } from "../utils/common.utils.js";
 
-export const createProduct = (req, res, next) => {
-  const { name, price } = req.body;
+export const obligatory = (fields) => {
+  return (req, res, next) => {
+    for (const field of fields) {
+      const value = req.body[field];
 
-  if (!name || !price || price < 0) {
-    // Comprobamos que como minimo tenga nombre y precio igual o mayor a 0
-    return res.status(400).json({
-      ok: false,
-      error: {
-        message: "Producto no creado, el nombre y el precio son obligatorios",
-      },
-    });
-  }
+      if (value === undefined || value === null || value === "") {
+        return next(Selector.BAD_INPUT);
+      }
+    }
 
-  next();
+    next();
+  };
 };
 
-export const updateProduct = (req, res, next) => {
-  const { name, description, price, stock, imageUrl } = req.body; // Obtenemos todos los elementos del body pasados por el usuario
+export const necessaryOne = (fields) => {
+  return (req, res, next) => {
+    let valids = [];
+    let invalids = [];
 
-  if (
-    // Comprobamos que haya almenos algun elemento nuevo para actualizar el producto
-    !name &&
-    !description &&
-    !price &&
-    !stock &&
-    !imageUrl
-  ) {
-    return res.status(400).json({
-      ok: false,
-      error: { message: "Debes completar algun campo para actualizar" },
-    });
-  }
+    for (const field of fields) {
+      const value = req.body[field];
 
-  next();
-};
+      if (value !== undefined && value !== null && value !== "") {
+        valids.push(value);
+      } else {
+        invalids.push(value);
+      }
+    }
 
-export const createUser = (req, res, next) => {
-  const { email, password, role } = req.body;
+    if (valids.length === 0) {
+      return next(Selector.MISSING_INPUT);
+    }
 
-  if (!email || !password) {
-    return res.status(400).json({
-      ok: false,
-      error: { message: "Debes ingresar el email y la contraseña" },
-    });
-  }
+    if (invalids.length > 0) {
+      for (const field of invalids) {
+        if (field === undefined || field === null || field === "") {
+          return next(Selector.BAD_INPUT);
+        }
+      }
+    }
 
-  next();
-};
-
-export const loginOneUser = (req, res, next) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({
-      ok: false,
-      error: { message: "Debes ingresar el email y la contraseña" },
-    });
-  }
-
-  next();
-};
-
-export const updateUser = (req, res, next) => {
-  const { role } = req.body;
-
-  if (!role) {
-    return res.status(400).json({
-      ok: false,
-      error: { message: "Debes ingresar el rol" },
-    });
-  }
-
-  next();
-};
-
-export const createReview = async (req, res, next) => {
-  const { productId, rating, comment } = req.body;
-
-  if (!rating || !productId) {
-    return res.status(400).json({
-      ok: false,
-      error: { message: "Debes ingresar el rating y el productId" },
-    });
-  }
-
-  // Comprobamos que el producto exista en la base de datos
-  const id = Number(productId);
-  const result = await prisma.product.findUnique({
-    where: { id },
-  });
-
-  if (!result) {
-    return res.status(404).json({
-      ok: false,
-      error: { message: "Producto no encontrado" },
-    });
-  }
-
-  next();
-};
-
-export const updateReview = (req, res, next) => {
-  const { rating, comment } = req.body;
-
-  if (!rating && !comment) {
-    return res.status(400).json({
-      ok: false,
-      error: { message: "Debes ingresar el rating o el comentario para actualizar" },
-    });
-  }
-
-  next();
-};
-
-export const addItem = (req, res, next) => {
-  const { productId, quantity } = req.body;
-
-  if (!productId || !quantity) {
-    return res.status(400).json({
-      ok: false,
-      error: { message: "Debes ingresar el Id del producto y la cantidad para añadirlo al carrito" },
-    });
-  }
-
-  next();
+    next();
+  };
 };
