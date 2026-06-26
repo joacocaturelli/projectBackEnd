@@ -1,20 +1,27 @@
 import * as reviewService from "../services/review.service.js";
-import { isString } from "../utils/common.utils.js";
+import { needNumber } from "../utils/common.utils.js";
+import { Selector } from "../utils/errors.utils.js";
 
 export const getReviewByUser = async (req, res, next) => {
   const { id } = res.locals;
   const result = await reviewService.getReviewByUser(id);
 
-  return res.status(200).json({
+  if (!result.ok) return next(result.error);
+
+  return res.json({
     ok: true,
     data: result.content,
   });
 };
 
 export const getReviewByProduct = async (req, res, next) => {
-  const result = await reviewService.getReviewByProduct(req.params.productId);
+  const productId = req.params.productId;
 
-  return res.status(200).json({
+  const result = await reviewService.getReviewByProduct(productId);
+
+  if (!result.ok) return next(result.error);
+
+  return res.json({
     ok: true,
     data: result.content,
   });
@@ -25,9 +32,13 @@ export const createReviewByProduct = async (req, res, next) => {
   const { rating, comment } = req.body;
   const { id } = res.locals;
 
-  const result = await reviewService.createReview(isString(id), productId, rating, comment);
+  const ratingResult = needNumber(rating);
 
-  if (!result.ok) return next(new Error("No se pudo crear la review"));
+  if (!ratingResult.ok) return next(Selector.BAD_INPUT);
+
+  const result = await reviewService.createReview(id, productId, rating, comment);
+
+  if (!result.ok) return next(result.error);
 
   return res.status(201).json({
     ok: true,
@@ -39,9 +50,13 @@ export const createReview = async (req, res, next) => {
   const { productId, rating, comment } = req.body;
   const { id } = res.locals;
 
-  const result = await reviewService.createReview(isString(id), productId, rating, comment);
+  const ratingResult = needNumber(rating);
 
-  if (!result.ok) return next(new Error("No se pudo crear la review"));
+  if (!ratingResult.ok) return next(Selector.BAD_INPUT);
+
+  const result = await reviewService.createReview(id, productId, rating, comment);
+
+  if (!result.ok) return next(result.error);
 
   return res.status(201).json({
     ok: true,
@@ -54,9 +69,13 @@ export const updateReview = async (req, res, next) => {
   const { id } = res.locals;
   const { productId } = req.params;
 
-  const result = await reviewService.updateReview(isString(id), productId, { rating, comment });
+  const ratingResult = needNumber(rating);
 
-  if (!result.ok) return next(new Error("No se pudo actualizar la review"));
+  if (!ratingResult.ok) return next(Selector.BAD_INPUT);
+
+  const result = await reviewService.updateReview(id, productId, { rating, comment });
+
+  if (!result.ok) return next(result.error);
 
   return res.json({
     ok: true,
@@ -68,9 +87,9 @@ export const deleteReview = async (req, res, next) => {
   const { productId } = req.params;
   const { id } = res.locals;
 
-  const result = await reviewService.deleteReview(isString(id), productId);
+  const result = await reviewService.deleteReview(id, productId);
 
-  if (!result.ok) return next(new Error("No se pudo eliminar la review"));
+  if (!result.ok) return next(result.error);
 
   return res.json({
     ok: true,
