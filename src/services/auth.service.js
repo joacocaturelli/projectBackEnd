@@ -3,19 +3,24 @@ import jwt from "jsonwebtoken";
 import prisma from "../config/prismaClient.js";
 import { isString } from "../utils/common.utils.js";
 
+// Registrar un nuevo usuario
 export const registerUser = async ({ password, ...user }) => {
   try {
-    const hashedPassword = await bcrypt.hash(isString(password), 10); // Hasheamos la contraseña y la guardamos
+    // Hasheamos la contraseña y la guardamos
+    const hashedPassword = await bcrypt.hash(isString(password), 10);
 
-    await prisma.user.create({ data: { ...user, password: hashedPassword } }); // Creamos el usuario en la db con su mail, role y contraseña hasheada
+    // Creamos el usuario en la db con su mail, role y contraseña hasheada
+    await prisma.user.create({ data: { ...user, password: hashedPassword } });
 
     return {
       ok: true,
+      data: "User registered",
     };
   } catch (error) {
     console.log("Error registrando usuario", error.message);
     return {
       ok: false,
+      error: error.message,
     };
   }
 };
