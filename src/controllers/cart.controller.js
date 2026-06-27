@@ -50,7 +50,7 @@ export const checkOut = async (req, res, next) => {
 
   const result = await cartService.checkOut(id);
 
-  if (!result) return next(Selector.BAD_ERROR);
+  if (!result.ok) return next(Selector.BAD_ERROR);
 
   res.json({
     ok: true,
