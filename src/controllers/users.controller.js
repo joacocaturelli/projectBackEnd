@@ -1,87 +1,70 @@
 import * as usersService from "../services/users.service.js";
+import { Selector } from "../utils/errors.utils.js";
 
 export const getProfile = async (req, res, next) => {
-  try {
-    const { email, role } = res.locals;
+  const { email } = res.locals;
 
-    const result = await usersService.getMe({ email, role });
+  const result = await usersService.getMe({ email });
 
-    if (!result.ok) return next(new Error("No se pudo obtener obtener el usuario"));
+  if (!result.ok) return next(Selector.NOT_FOUND);
 
-    return res.status(200).json({
-      ok: true,
-      data: result.content,
-    });
-  } catch (error) {
-    next(error);
-  }
+  return res.json({
+    ok: true,
+    data: result.content,
+  });
 };
 
 export const getUsers = async (req, res, next) => {
-  try {
-    const result = await usersService.getAllUsers();
+  const result = await usersService.getAllUsers();
 
-    if (!result.ok) return next(new Error("No se pudieron obtener obtener los usuarios"));
+  if (!result.ok) return next(Selector.NOT_FOUND);
 
-    return res.status(200).json({
-      ok: true,
-      data: result.content,
-    });
-  } catch (error) {
-    next(error);
-  }
+  return res.json({
+    ok: true,
+    data: result.content,
+  });
 };
 
 export const getUserById = async (req, res, next) => {
-  try {
-    const user = await usersService.getUserById(parseInt(req.params.id));
+  const id = parseInt(req.params.id);
 
-    if (!user) return next(new Error("Usuario no encontrado"));
+  const result = await usersService.getUserById(id);
 
-    return res.status(200).json({
-      ok: true,
-      data: user,
-    });
-  } catch (error) {
-    next(error);
-  }
+  if (!result.ok) return next(Selector.NOT_FOUND);
+
+  return res.json({
+    ok: true,
+    data: result.content,
+  });
 };
 
 export const updateUser = async (req, res, next) => {
-  try {
-    const { role } = req.body;
-    const user = await usersService.updateUser(parseInt(req.params.id), { role });
+  const { role } = req.body;
+  const id = parseInt(req.params.id);
 
-    return res.status(200).json({
-      ok: true,
-      data: user,
-    });
-  } catch (error) {
-    if (error.code === "P2025") {
-      return res.status(404).json({
-        ok: false,
-        error: { message: "Usuario no encontrado para actualizar" },
-      });
-    }
-    next(error);
-  }
+  const result = await usersService.updateUser(id, { role });
+
+  if (result.error) return next(Selector.NOT_FOUND);
+
+  if (!result.ok) return next(Selector.BAD_ERROR);
+
+  return res.json({
+    ok: true,
+    data: result.content,
+  });
 };
 
 export const deleteUser = async (req, res, next) => {
-  try {
-    const user = await usersService.deleteUser(parseInt(req.params.id));
+  const id = parseInt(req.params.id);
 
-    return res.status(200).json({
-      ok: true,
-      data: user,
-    });
-  } catch (error) {
-    if (error.code === "P2025") {
-      return res.status(404).json({
-        ok: false,
-        error: { message: "Usuario no encontrado para eliminar" },
-      });
-    }
-    next(error);
-  }
+  const result = await usersService.deleteUser(id);
+
+  if (result.error) return next(Selector.NOT_FOUND);
+
+  if (!result.ok) return next(Selector.BAD_ERROR);
+
+  return res.json({
+    ok: true,
+    data: result.content,
+  });
 };

@@ -1,18 +1,20 @@
 import prisma from "../config/prismaClient.js";
 
-export const getMe = async ({ email, role }) => {
+export const getMe = async ({ email }) => {
   try {
-    const user = await prisma.user.findUnique({
+    const result = await prisma.user.findUnique({
       where: { email },
       select: { email: true, role: true },
     });
 
+    if (!result) throw new Error("No se pudo obtener el usuario desde prisma");
+
     return {
       ok: true,
-      content: user,
+      content: result,
     };
   } catch (error) {
-    console.log("Error al obtener perfil:", error.message);
+    console.log("Error geting profile:", error.message);
     return {
       ok: false,
     };
@@ -21,15 +23,17 @@ export const getMe = async ({ email, role }) => {
 
 export const getAllUsers = async () => {
   try {
-    const users = await prisma.user.findMany({
+    const result = await prisma.user.findMany({
       omit: {
         password: true,
       },
     });
 
+    if (!result) throw new Error("No se pudieron obtener los usuarios desde prisma");
+
     return {
       ok: true,
-      content: users,
+      content: result,
     };
   } catch (error) {
     console.log("Error al obtener todos los usuarios:", error.message);
@@ -39,27 +43,84 @@ export const getAllUsers = async () => {
   }
 };
 
-export const getUserById = (id) => {
-  return prisma.user.findUnique({
-    where: { id },
-    select: {
-      email: true,
-      role: true,
-    },
-  });
+export const getUserById = async (id) => {
+  try {
+    const result = await prisma.user.findUnique({
+      where: { id },
+      select: { email: true, role: true },
+    });
+
+    if (!result) throw new Error("No se pudo obtener el usuario desde prisma");
+
+    return {
+      ok: true,
+      content: result,
+    };
+  } catch (error) {
+    console.log("Error geting user by Id:", error.message);
+    return {
+      ok: false,
+    };
+  }
 };
 
-export const updateUser = (id, data) => {
-  return prisma.user.update({
-    where: { id },
-    omit: { password: true },
-    data,
-  });
+export const updateUser = async (id, data) => {
+  try {
+    const result = await prisma.user.update({
+      where: { id },
+      omit: { password: true },
+      data,
+    });
+
+    if (!result) throw new Error("No se pudo actualizar el usuario desde prisma");
+
+    return {
+      ok: true,
+      content: result,
+    };
+  } catch (error) {
+    if (error.code === "P2025") {
+      console.log("Error updating user:", error.message);
+
+      return {
+        ok: false,
+        error: "User not found",
+      };
+    }
+
+    console.log("Error updating user:", error.message);
+    return {
+      ok: false,
+    };
+  }
 };
 
-export const deleteUser = (id) => {
-  return prisma.user.delete({
-    where: { id },
-    omit: { password: true },
-  });
+export const deleteUser = async (id) => {
+  try {
+    const result = await prisma.user.delete({
+      where: { id },
+      omit: { password: true },
+    });
+
+    if (!result) throw new Error("No se pudo eliminar el usuario desde prisma");
+
+    return {
+      ok: true,
+      content: result,
+    };
+  } catch (error) {
+    if (error.code === "P2025") {
+      console.log("Error deleting user:", error.message);
+
+      return {
+        ok: false,
+        error: "User not found",
+      };
+    }
+
+    console.log("Error deleting user:", error.message);
+    return {
+      ok: false,
+    };
+  }
 };
