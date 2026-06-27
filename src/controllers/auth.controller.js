@@ -3,7 +3,7 @@ import prisma from "../config/prismaClient.js";
 import { cookieOptions } from "../utils/common.utils.js";
 import { Selector } from "../utils/errors.utils.js";
 
-export const register = async (req, res, next) => {
+export const registerUser = async (req, res, next) => {
   const { email, password, role } = req.body;
 
   const result = await authService.registerUser({ email, password, role });
@@ -16,7 +16,7 @@ export const register = async (req, res, next) => {
   });
 };
 
-export const login = async (req, res, next) => {
+export const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   const result = await authService.loginUser({ email, password });
