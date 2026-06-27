@@ -21,11 +21,6 @@ export const isString = (value) => {
   return JSON.stringify(value);
 };
 
-export const isNumber = (value) => {
-  if (typeof value === "number") return value;
-  return Number(value);
-};
-
 export const needNumber = (value) => {
   const number = Number(value);
 

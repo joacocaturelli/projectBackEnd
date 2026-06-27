@@ -1,7 +1,6 @@
 import prisma from "../config/prismaClient.js";
 import { Review } from "../models/review.model.js";
 import { getAllProducts } from "./products.service.js";
-import { isNumber } from "../utils/common.utils.js";
 import { Selector } from "../utils/errors.utils.js";
 
 export const getReviewByUser = async (userId) => {
@@ -33,7 +32,7 @@ export const getReviewByUser = async (userId) => {
 
 export const getReviewByProduct = async (productId) => {
   try {
-    const id = isNumber(productId);
+    const id = Number(productId);
 
     const product = await prisma.product.findUnique({
       where: { id },
@@ -67,7 +66,7 @@ export const getReviewByProduct = async (productId) => {
 
 export const createReview = async (userId, productId, rating, comment) => {
   try {
-    const id = isNumber(productId);
+    const id = Number(productId);
 
     const product = await prisma.product.findUnique({
       where: { id },
@@ -94,7 +93,7 @@ export const createReview = async (userId, productId, rating, comment) => {
 
 export const updateReview = async (userId, productId, data) => {
   try {
-    const id = isNumber(productId);
+    const id = Number(productId);
 
     const product = await prisma.product.findUnique({
       where: { id },
@@ -125,7 +124,7 @@ export const updateReview = async (userId, productId, data) => {
 
 export const deleteReview = async (userId, productId) => {
   try {
-    const id = isNumber(productId);
+    const id = Number(productId);
 
     const product = await prisma.product.findUnique({
       where: { id },

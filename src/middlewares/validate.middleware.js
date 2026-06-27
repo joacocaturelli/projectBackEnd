@@ -1,6 +1,5 @@
 import prisma from "../config/prismaClient.js";
 import { Selector } from "../utils/errors.utils.js";
-import { isNumber } from "../utils/common.utils.js";
 
 export const obligatory = (fields) => {
   return (req, res, next) => {
@@ -37,7 +36,7 @@ export const necessaryOne = (fields) => {
 
     if (invalids.length > 0) {
       for (const field of invalids) {
-        if (field === undefined || field === null || field === "") {
+        if (field === null || field === "") {
           return next(Selector.BAD_INPUT);
         }
       }
