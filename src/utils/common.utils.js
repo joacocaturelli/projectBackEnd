@@ -27,9 +27,11 @@ export const isNumber = (value) => {
 };
 
 export const needNumber = (value) => {
-  const number = isNumber(value);
+  const number = Number(value);
 
   if (Number.isNaN(number)) return { ok: false };
+
+  if (number < 0) return { ok: false };
 
   return { ok: true, content: number };
 };
