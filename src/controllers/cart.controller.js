@@ -3,81 +3,57 @@ import { needNumber } from "../utils/common.utils.js";
 import { Selector } from "../utils/errors.utils.js";
 
 export const getCart = async (req, res, next) => {
-  try {
-    const { id } = res.locals;
+  const { id } = res.locals;
 
-    const result = await cartService.getCart(id);
+  const result = await cartService.getCart(id);
 
-    if (!result) return next(new Error("No se pudo obtener el carrito"));
+  if (!result.ok) return next(Selector.BAD_ERROR);
 
-    res.json({
-      ok: true,
-      data: result,
-    });
-  } catch (error) {
-    console.log("Error:", error.message);
-    return {
-      ok: false,
-    };
-  }
+  res.json({
+    ok: true,
+    data: result.content,
+  });
 };
 
 export const getCartById = async (req, res, next) => {
-  try {
-    const result = await cartService.getCartById(req.params.cartId);
+  const id = req.params.cartId;
 
-    if (!result) return next(new Error("No se pudo obtener el carrito"));
+  const result = await cartService.getCartById(id);
 
-    res.json({
-      ok: true,
-      data: result,
-    });
-  } catch (error) {
-    console.log("Error:", error.message);
-    return {
-      ok: false,
-    };
-  }
+  if (!result.ok) return next(Selector.NOT_FOUND);
+
+  res.json({
+    ok: true,
+    data: result.content,
+  });
 };
 
 export const addItem = async (req, res, next) => {
-  try {
-    const { productId, quantity } = req.body;
-    const { id } = res.locals;
+  const { productId, quantity } = req.body;
+  const { id } = res.locals;
 
-    const resultQuantity = needNumber(quantity);
+  const resultQuantity = needNumber(quantity);
+  if (!resultQuantity.ok) return next(Selector.BAD_INPUT);
 
-    if (!resultQuantity.ok) return next(Selector.BAD_INPUT);
+  const result = await cartService.addItem(id, productId, resultQuantity.content);
 
-    const result = await cartService.addItem(id, productId, quantity);
+  if (!result.ok) return next(Selector.BAD_ERROR);
 
-    if (!result) return next(new Error("No se pudo añadir el item al carrito"));
-
-    res.status(201).json({
-      ok: true,
-      data: result,
-    });
-  } catch (error) {
-    console.log("Error:", error.message);
-    return {
-      ok: false,
-    };
-  }
+  res.status(201).json({
+    ok: true,
+    data: result.content,
+  });
 };
 
 export const checkOut = async (req, res, next) => {
-  try {
-    const { id } = res.locals;
+  const { id } = res.locals;
 
-    const result = await cartService.checkOut(id);
+  const result = await cartService.checkOut(id);
 
-    if (!result) return next(new Error("No se pudo hacer el check out"));
+  if (!result) return next(Selector.BAD_ERROR);
 
-    res.json({
-      ok: true,
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
+  res.json({
+    ok: true,
+    data: result.content,
+  });
 };
