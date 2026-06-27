@@ -1,6 +1,5 @@
 import prisma from "../config/prismaClient.js";
 import { Review } from "../models/review.model.js";
-import { getAllProducts } from "./products.service.js";
 import { Selector } from "../utils/errors.utils.js";
 
 export const getReviewByUser = async (userId) => {

@@ -4,7 +4,7 @@ import { needNumber } from "../utils/common.utils.js";
 
 export const getProducts = async (req, res, next) => {
   // Funcion para obtener todos los productos
-  const result = await productsService.getAllProducts();
+  const result = await productsService.getProducts();
 
   if (!result.ok) return next(Selector.NOT_FOUND);
 

@@ -1,6 +1,6 @@
 import prisma from "../config/prismaClient.js";
 import { Wishlist } from "../models/wishlist.model.js";
-import { getAllProducts } from "./products.service.js";
+import { getProducts } from "./products.service.js";
 
 export const getWishlistByUser = async (userId) => {
   try {
@@ -10,7 +10,7 @@ export const getWishlistByUser = async (userId) => {
     if (!result) throw new Error("No se pudo obtener la wishlist desde Mongo");
 
     // Trasnforma la respuesta en un array de numeros con los products id
-    const { content } = await getAllProducts(result.map(({ productId }) => Number(productId)));
+    const { content } = await getProducts(result.map(({ productId }) => Number(productId)));
 
     return {
       ok: true,

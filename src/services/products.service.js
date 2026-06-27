@@ -1,6 +1,6 @@
 import prisma from "../config/prismaClient.js";
 
-export const getAllProducts = async (productsIds) => {
+export const getProducts = async (productsIds) => {
   try {
     const result = await prisma.product.findMany({
       omit: { createdAt: true },
