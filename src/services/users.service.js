@@ -1,6 +1,6 @@
 import prisma from "../config/prismaClient.js";
 
-export const getMe = async ({ email }) => {
+export const getProfile = async ({ email }) => {
   try {
     const result = await prisma.user.findUnique({
       where: { email },
@@ -21,7 +21,7 @@ export const getMe = async ({ email }) => {
   }
 };
 
-export const getAllUsers = async () => {
+export const getUsers = async () => {
   try {
     const result = await prisma.user.findMany({
       omit: {

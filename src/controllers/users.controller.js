@@ -4,7 +4,7 @@ import { Selector } from "../utils/errors.utils.js";
 export const getProfile = async (req, res, next) => {
   const { email } = res.locals;
 
-  const result = await usersService.getMe({ email });
+  const result = await usersService.getProfile({ email });
 
   if (!result.ok) return next(Selector.NOT_FOUND);
 
@@ -15,7 +15,7 @@ export const getProfile = async (req, res, next) => {
 };
 
 export const getUsers = async (req, res, next) => {
-  const result = await usersService.getAllUsers();
+  const result = await usersService.getUsers();
 
   if (!result.ok) return next(Selector.NOT_FOUND);
 
