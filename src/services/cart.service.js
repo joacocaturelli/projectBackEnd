@@ -61,7 +61,7 @@ export const addItem = async (userId, productId, quantity) => {
 
     if (!product) throw new Error("Producto no encontrado");
 
-    const cart = await getCart(userId);
+    const { content: cart } = await getCart(userId);
 
     // Comprobar si existe el producto en el carrito
     const existingItem = await prisma.cartItem.findFirst({

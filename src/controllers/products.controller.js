@@ -65,12 +65,12 @@ export const updateOneProduct = async (req, res, next) => {
   const { name, description, price, stock, imageUrl } = req.body;
   // Obtenemos todos los elementos del body pasados por el usuario
 
-  if (price) {
+  if (price !== undefined) {
     const priceResult = needNumber(price);
     if (!priceResult.ok) return next(Selector.BAD_INPUT);
   }
 
-  if (stock) {
+  if (stock !== undefined) {
     const stockResult = needNumber(stock);
     if (!stockResult.ok) return next(Selector.BAD_INPUT);
   }
