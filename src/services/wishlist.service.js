@@ -46,7 +46,6 @@ export const addToWishlist = async (userId, productId) => {
     console.log("Error adding into wishlist", error.message);
     return {
       ok: false,
-      message: error.message,
     };
   }
 };

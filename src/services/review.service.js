@@ -14,7 +14,7 @@ export const getReviewByUser = async (userId) => {
       },
     );
 
-    if (!result) throw new Error(Selector.BAD_ERROR);
+    if (!result) throw new Error("Reviews no obtenidas desde Mongo");
 
     return {
       ok: true,
@@ -24,7 +24,6 @@ export const getReviewByUser = async (userId) => {
     console.log("Error showing all reviews", error.message);
     return {
       ok: false,
-      error: error.message,
     };
   }
 };
@@ -37,7 +36,7 @@ export const getReviewByProduct = async (productId) => {
       where: { id },
     });
 
-    if (!product) throw new Error(Selector.NOT_FOUND);
+    if (!product) throw new Error("Producto no encontrado desde Prisma");
 
     const result = await Review.find(
       { productId },
@@ -48,7 +47,7 @@ export const getReviewByProduct = async (productId) => {
       },
     );
 
-    if (!result) throw new Error(Selector.BAD_ERROR);
+    if (!result) throw new Error("Reviews no obtenidas desde Mongo");
 
     return {
       ok: true,
@@ -58,7 +57,6 @@ export const getReviewByProduct = async (productId) => {
     console.log("Error al obtener las reviews del producto", error.message);
     return {
       ok: false,
-      error: error.message,
     };
   }
 };
@@ -71,11 +69,11 @@ export const createReview = async (userId, productId, rating, comment) => {
       where: { id },
     });
 
-    if (!product) throw new Error(Selector.NOT_FOUND);
+    if (!product) throw new Error("Producto no encontrado desde Prisma");
 
     const result = await Review.create({ userId, productId, rating, comment });
 
-    if (!result) throw new Error(Selector.BAD_ERROR);
+    if (!result) throw new Error("No se pudo crear la review desde Mongo");
 
     return {
       ok: true,
@@ -85,7 +83,6 @@ export const createReview = async (userId, productId, rating, comment) => {
     console.log("Error al crear la review", error.message);
     return {
       ok: false,
-      error: error.message,
     };
   }
 };
@@ -98,7 +95,7 @@ export const updateReview = async (userId, productId, data) => {
       where: { id },
     });
 
-    if (!product) throw new Error(Selector.NOT_FOUND);
+    if (!product) throw new Error("Producto no encontrado desde Prisma");
 
     const result = await Review.findOneAndUpdate(
       { userId, productId },
@@ -106,7 +103,7 @@ export const updateReview = async (userId, productId, data) => {
       { new: true },
     );
 
-    if (!result) throw new Error(Selector.NOT_FOUND);
+    if (!result) throw new Error("No se pudo actualizar la review desde Mongo");
 
     return {
       ok: true,
@@ -129,11 +126,11 @@ export const deleteReview = async (userId, productId) => {
       where: { id },
     });
 
-    if (!product) throw new Error(Selector.NOT_FOUND);
+    if (!product) throw new Error("Producto no encontrado desde Prisma");
 
     const result = await Review.findOneAndDelete({ userId, productId });
 
-    if (!result) throw new Error(Selector.NOT_FOUND);
+    if (!result) throw new Error("Review no encontada desde Mongo");
 
     return {
       ok: true,
@@ -143,7 +140,6 @@ export const deleteReview = async (userId, productId) => {
     console.log("Error deleting review", error.message);
     return {
       ok: false,
-      error: error.message,
     };
   }
 };
