@@ -41,11 +41,8 @@ const errors = {
 };
 
 export default class CustomError extends Error {
-  constructor(errorType, customStatusCode = 418) {
+  constructor(errorType) {
     super(""); // Invocar al constructor de la clase padre(Error)
-
-    // Crea variables para la clase CustomError
-    this.customCode = customStatusCode;
 
     // Destructuring de variables obtenidas del errorType en el catalogo
     const { statusCode, message } = this._getError(errorType);
@@ -58,13 +55,7 @@ export default class CustomError extends Error {
 
   // Busca dentro del catalogo el valor asociado al errorType
   // Si no hay ninguno, por defecto sera BAD_ERROR(500)
-  // Si hay pero no esta dentro del catalogo, pasa a la siguiente funcion
-  _getError(errorType = Selector.BAD_ERROR) {
-    return errors[errorType] ?? this._getCustomMessage(errorType);
-  }
-
-  // Crea un mensaje nuevo con el valor introducido
-  _getCustomMessage(message) {
-    return { statusCode: this.customCode, message };
+  _getError(errorType) {
+    return errors[errorType] ?? errors[Selector.BAD_ERROR];
   }
 }
