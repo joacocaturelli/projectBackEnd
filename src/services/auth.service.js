@@ -16,7 +16,7 @@ export const registerUser = async ({ password, ...user }) => {
 
     return {
       ok: true,
-      data: "User registered",
+      content: "User registered",
     };
   } catch (error) {
     console.log("Error registering user", error.message);
