@@ -10,19 +10,31 @@ const router = express.Router();
  * /api/reviews:
  *   get:
  *     summary: Obtener reviews del usuario autenticado
+ *     description: >
+ *       Devuelve las reviews creadas por el usuario autenticado.
  *     tags:
  *       - Reviews
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     responses:
  *       200:
- *         description: OK
+ *         description: Reviews del usuario obtenidas correctamente
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: "#/components/schemas/Review"
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: "#/components/schemas/ReviewByUser"
+ *       401:
+ *         $ref: "#/components/responses/NoTokenError"
+ *       404:
+ *         $ref: "#/components/responses/NotFoundError"
  */
 router.get("/", authMiddleware, reviewController.getReviewByUser);
 
@@ -30,11 +42,15 @@ router.get("/", authMiddleware, reviewController.getReviewByUser);
  * @openapi
  * /api/reviews:
  *   post:
- *     summary: Crear review
+ *     summary: Crear una review
+ *     description: >
+ *       Crea una review pasando `productId` en el body.
+ *       Un usuario solo puede tener una review por producto
+ *       El campo `rating` debe ser un número entero entre 1 y 5.
  *     tags:
  *       - Reviews
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -43,7 +59,25 @@ router.get("/", authMiddleware, reviewController.getReviewByUser);
  *             $ref: "#/components/schemas/ReviewCreate"
  *     responses:
  *       201:
- *         description: Review creada
+ *         description: Review creada correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: "#/components/schemas/Review"
+ *       400:
+ *         $ref: "#/components/responses/BadInputError"
+ *       401:
+ *         $ref: "#/components/responses/NoTokenError"
+ *       409:
+ *         $ref: "#/components/responses/ConflictError"
+ *       500:
+ *         $ref: "#/components/responses/ServerError"
  */
 router.post("/", authMiddleware, validate.obligatory(["rating", "productId"]), reviewController.createReview);
 
@@ -51,17 +85,24 @@ router.post("/", authMiddleware, validate.obligatory(["rating", "productId"]), r
  * @openapi
  * /api/reviews/{productId}:
  *   put:
- *     summary: Actualizar review de un producto
+ *     summary: Actualizar la review del usuario sobre un producto
+ *     description: >
+ *       Actualiza la review del usuario autenticado sobre el producto indicado.
+ *       Al menos uno de los campos (`rating` o `comment`) es obligatorio.
+ *       Si se envía `rating`, debe ser un número entero entre 1 y 5.
+ *       Devuelve el documento Mongo completo actualizado (con `{ new: true }`).
  *     tags:
  *       - Reviews
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: productId
  *         required: true
+ *         description: ID del producto en Prisma
  *         schema:
  *           type: integer
+ *           example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -70,11 +111,23 @@ router.post("/", authMiddleware, validate.obligatory(["rating", "productId"]), r
  *             $ref: "#/components/schemas/ReviewPut"
  *     responses:
  *       200:
- *         description: Review actualizada
+ *         description: Review actualizada correctamente
  *         content:
  *           application/json:
  *             schema:
- *               $ref: "#/components/schemas/Review"
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: "#/components/schemas/Review"
+ *       400:
+ *         $ref: "#/components/responses/BadInputError"
+ *       401:
+ *         $ref: "#/components/responses/NoTokenError"
+ *       500:
+ *         $ref: "#/components/responses/ServerError"
  */
 router.put("/:productId", authMiddleware, validate.necessaryOne(["rating", "comment"]), reviewController.updateReview);
 
@@ -82,28 +135,39 @@ router.put("/:productId", authMiddleware, validate.necessaryOne(["rating", "comm
  * @openapi
  * /api/reviews/{productId}:
  *   delete:
- *     summary: Eliminar review
+ *     summary: Eliminar la review del usuario sobre un producto
+ *     description: >
+ *       Elimina la review del usuario autenticado sobre el producto indicado.
+ *       Devuelve el documento Mongo completo que fue eliminado.
  *     tags:
  *       - Reviews
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: productId
  *         required: true
+ *         description: ID del producto en Prisma
  *         schema:
  *           type: integer
+ *           example: 1
  *     responses:
  *       200:
- *         description: Review eliminado
+ *         description: Review eliminada. Devuelve el documento eliminado.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
- *                   type: string
- *                   example: Review deleted
+ *                 ok:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: "#/components/schemas/Review"
+ *       401:
+ *         $ref: "#/components/responses/NoTokenError"
+ *       500:
+ *         $ref: "#/components/responses/ServerError"
  */
 router.delete("/:productId", authMiddleware, reviewController.deleteReview);
 
