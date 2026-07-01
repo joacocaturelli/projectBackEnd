@@ -27,49 +27,49 @@ Incluye:
 
 ### Autenticación
 
-- Registro de usuarios.
-- Login con generación de JWT.
-- Middleware de autenticación por token.
-- Control de acceso por roles.
+- Registro de usuarios
+- Login con generación de JWT
+- Middleware de autenticación por token
+- Control de acceso por roles
 
 ### Usuarios
 
-- Obtención de perfil de usuario.
-- Gestión de datos de usuario.
-- Roles y permisos.
+- Obtención de perfil de usuario
+- Gestión de datos de usuario
+- Roles y permisos
 
 ### Productos
 
-- Creación de productos.
-- Listado de productos.
-- Actualización y eliminación.
-- Soporte para imágenes mediante Cloudinary.
+- Creación de productos
+- Listado de productos
+- Actualización y eliminación
+- Subida de imágenes mediante Cloudinary
 
 ### Carrito (Cart)
 
-- Añadir productos al carrito.
-- Actualizar cantidades.
-- Eliminar productos del carrito.
-- Vaciar carrito.
+- Añadir productos al carrito
+- Actualizar cantidades
+- Eliminar productos del carrito
+- Vaciar carrito
 
 ### Wishlist
 
-- Añadir productos a favoritos.
-- Eliminar productos de la lista.
-- Listado de productos guardados.
+- Añadir productos a favoritos
+- Eliminar productos de la lista
+- Listado de productos guardados
 
 ### Reviews
 
-- Crear reseñas por producto.
-- Listar reseñas asociadas a productos.
-- Validaciones de datos de entrada.
+- Crear reseñas por producto
+- Listar reseñas asociadas a productos
+- Validación de datos de entrada
 
-### Middleware y seguridad
+### Seguridad y Middlewares
 
-- Validación de requests.
-- Manejo centralizado de errores.
-- Protección de rutas privadas.
-- Control de roles.
+- Validación de requests
+- Manejo centralizado de errores
+- Autenticación con JWT
+- Control de roles
 
 ---
 
@@ -79,7 +79,7 @@ Incluye:
 - Express.js
 - Prisma ORM
 - MongoDB
-- PostgreSQL (vía Prisma)
+- PostgreSQL
 - JWT (JSON Web Token)
 - bcrypt
 - Cloudinary
@@ -160,26 +160,23 @@ projectBackEnd/
 ├── package-lock.json
 ├── package.json
 └── prisma.config.js
-
 ```
-
----
 
 ## Arquitectura
 
-El proyecto sigue una arquitectura en capas con separación clara de responsabilidades:
+El proyecto sigue una arquitectura en capas:
 
-- **Routes** → Definición de endpoints.
-- **Controllers** → Manejo de requests y responses HTTP.
-- **Services** → Lógica de negocio y acceso a datos.
-- **Middlewares** → Autenticación, validación y control de errores.
-- **Utils** → Funciones auxiliares reutilizables.
-- **Models** → Esquemas auxiliares (MongoDB).
-- **Prisma** → ORM principal para base de datos relacional.
+- Routes → definición de endpoints
+- Controllers → manejo de requests y responses
+- Services → lógica de negocio
+- Middlewares → autenticación, validación y control de errores
+- Utils → funciones auxiliares reutilizables
+- Models → esquemas auxiliares (MongoDB)
+- Prisma → ORM principal
 
-El flujo de una petición es:
+Flujo de una petición:
 
-```text
+```
 Request → Routes → Middlewares → Controllers → Services → Database → Response
 ```
 
@@ -215,10 +212,6 @@ Iniciar el servidor en modo desarrollo:
 npm run dev
 ```
 
-Perfecto, pero ojo con algo importante: no conviene meter el link “pelado” sin contexto porque un profesor puede intentar abrir Swagger directo y pensar que está roto si no entiende la ruta base. Lo correcto es dejarlo bien explícito.
-
-Te dejo el bloque actualizado para que lo sustituyas en el README:
-
 ---
 
 ## Documentación de la API
@@ -239,29 +232,25 @@ Desde allí se pueden visualizar y probar todos los endpoints disponibles.
 
 El proyecto se encuentra desplegado en **Render** y puede accederse mediante el siguiente enlace:
 
-[https://backend-e-commerce-keoz.onrender.com](https://backend-e-commerce-keoz.onrender.com)
+👉 [https://backend-e-commerce-keoz.onrender.com](https://backend-e-commerce-keoz.onrender.com)
 
-### Documentación de la API (Swagger)
+La documentación está disponible mediante Swagger:
 
-La documentación completa está disponible en Swagger UI:
-
-[https://backend-e-commerce-keoz.onrender.com/api/docs](https://backend-e-commerce-keoz.onrender.com/api/docs)
+👉 [https://backend-e-commerce-keoz.onrender.com/api/docs](https://backend-e-commerce-keoz.onrender.com/api/docs)
 
 ---
 
 ## Aprendizajes
 
-Este proyecto permitió trabajar en:
-
 - Arquitectura backend modular con Express
 - Separación por capas (controllers/services/routes)
-- Integración de Prisma ORM
+- Uso de Prisma ORM
 - Autenticación con JWT y control de roles
-- Manejo de archivos con Multer y Cloudinary
-- Diseño de APIs REST completas
-- Validación y manejo centralizado de errores
-- Documentación de APIs con Swagger
-- Testing básico de utilidades
+- Integración con Cloudinary y Multer
+- Diseño de APIs REST
+- Manejo centralizado de errores
+- Documentación con Swagger
+- Testing con Jest
 
 ---
 
