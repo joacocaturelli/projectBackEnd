@@ -31,15 +31,23 @@ export const getProduct = async (req, res, next) => {
 export const createOneProduct = async (req, res, next) => {
   // Funcion para crear un producto nuevo
 
-  const { name, description, price, stock, imageUrl } = req.body;
+  const { name, description, price, stock } = req.body;
   // Obtenemos todos los elementos del body pasados por el usuario
+
+  let { imageUrl } = req.body;
 
   const priceResult = needNumber(price);
   if (!priceResult.ok) return next(Selector.BAD_INPUT);
 
-  if (stock) {
+  if (stock !== undefined) {
     const stockResult = needNumber(stock);
     if (!stockResult.ok) return next(Selector.BAD_INPUT);
+  }
+
+  if (req.file) {
+    const imageResult = await productsService.uploadImage(req.file);
+
+    imageUrl = imageResult.content.secure_url;
   }
 
   const result = await productsService.createProduct({

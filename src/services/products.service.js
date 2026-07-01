@@ -1,4 +1,5 @@
 import prisma from "../config/prismaClient.js";
+import cloudinary from "../config/cloudinary.js";
 
 export const getProducts = async (productsIds) => {
   try {
@@ -112,6 +113,29 @@ export const deleteProduct = async (id) => {
     }
 
     console.log("Error deleting product", error.message);
+    return {
+      ok: false,
+    };
+  }
+};
+
+export const uploadImage = async (file) => {
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream({ folder: "products" }, (error, result) => {
+        if (error) return reject(error);
+
+        resolve(result);
+      });
+
+      stream.end(file.buffer);
+    });
+
+    return {
+      ok: true,
+      content: result,
+    };
+  } catch (error) {
     return {
       ok: false,
     };

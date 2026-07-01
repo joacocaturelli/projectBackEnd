@@ -4,6 +4,7 @@ import * as validate from "../middlewares/validate.middleware.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { requiredRole } from "../middlewares/requireRole.middleware.js";
 import { getReviewByProduct, createReviewByProduct } from "../controllers/review.controllers.js";
+import upload from "../config/multer.js";
 
 const router = express.Router(); //Creamos el router con la propiedad Router() de express
 
@@ -199,5 +200,7 @@ router.put(
  *                   example: Product deleted
  */
 router.delete("/:id", authMiddleware, requiredRole, productsController.deleteOneProduct);
+
+router.post("/image", upload.single("imageUrl"), productsController.createOneProduct);
 
 export default router;
