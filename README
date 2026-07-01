@@ -1,0 +1,273 @@
+# API E-commerce Backend
+
+API REST desarrollada con **Node.js, Express y Prisma ORM** como backend para un sistema de e-commerce. La arquitectura está separada por capas (controllers, services, routes, middlewares y utils), con integración a múltiples bases de datos y servicios externos.
+
+---
+
+## Descripción
+
+La aplicación implementa un backend completo para un e-commerce con gestión de usuarios, autenticación, productos, carrito de compras, wishlist y reseñas.
+
+Incluye:
+
+- Autenticación con JWT
+- Control de roles de usuario
+- Gestión de productos con imágenes
+- Carrito de compras persistente
+- Sistema de wishlist
+- Sistema de reviews por producto
+- Documentación de API con Swagger
+- Integración con Cloudinary para imágenes
+- Uso de Prisma como ORM principal
+- Soporte adicional con MongoDB (logs / modelos auxiliares)
+
+---
+
+## Funcionalidades
+
+### Autenticación
+
+- Registro de usuarios.
+- Login con generación de JWT.
+- Middleware de autenticación por token.
+- Control de acceso por roles.
+
+### Usuarios
+
+- Obtención de perfil de usuario.
+- Gestión de datos de usuario.
+- Roles y permisos.
+
+### Productos
+
+- Creación de productos.
+- Listado de productos.
+- Actualización y eliminación.
+- Soporte para imágenes mediante Cloudinary.
+
+### Carrito (Cart)
+
+- Añadir productos al carrito.
+- Actualizar cantidades.
+- Eliminar productos del carrito.
+- Vaciar carrito.
+
+### Wishlist
+
+- Añadir productos a favoritos.
+- Eliminar productos de la lista.
+- Listado de productos guardados.
+
+### Reviews
+
+- Crear reseñas por producto.
+- Listar reseñas asociadas a productos.
+- Validaciones de datos de entrada.
+
+### Middleware y seguridad
+
+- Validación de requests.
+- Manejo centralizado de errores.
+- Protección de rutas privadas.
+- Control de roles.
+
+---
+
+## Tecnologías utilizadas
+
+- Node.js
+- Express.js
+- Prisma ORM
+- MongoDB
+- PostgreSQL (vía Prisma)
+- JWT (JSON Web Token)
+- bcrypt
+- Cloudinary
+- Multer
+- Swagger (OpenAPI)
+- Jest
+
+---
+
+## Estructura del proyecto
+
+```bash
+projectBackEnd/
+├── prisma/
+│   ├── migrations/
+│   │   └── 20260624100829_add_role_enum/
+│   │       └── migration.sql
+│   ├── migration_lock.toml
+│   └── schema.prisma
+│
+├── src/
+│   ├── config/
+│   │   ├── cloudinary.js
+│   │   ├── env.js
+│   │   ├── mongo.js
+│   │   ├── multer.js
+│   │   ├── prismaClient.js
+│   │   └── swagger.js
+│   │
+│   ├── controllers/
+│   │   ├── auth.controller.js
+│   │   ├── cart.controller.js
+│   │   ├── products.controller.js
+│   │   ├── review.controllers.js
+│   │   ├── server.controller.js
+│   │   ├── users.controller.js
+│   │   └── wishlist.controller.js
+│   │
+│   ├── middlewares/
+│   │   ├── auth.middleware.js
+│   │   ├── errorHandler.middleware.js
+│   │   ├── requireRole.middleware.js
+│   │   └── validate.middleware.js
+│   │
+│   ├── models/
+│   │   ├── adminLog.model.js
+│   │   ├── review.model.js
+│   │   └── wishlist.model.js
+│   │
+│   ├── routes/
+│   │   ├── auth.routes.js
+│   │   ├── cart.routes.js
+│   │   ├── index.routes.js
+│   │   ├── products.routes.js
+│   │   ├── review.routes.js
+│   │   ├── users.routes.js
+│   │   └── wishlist.routes.js
+│   │
+│   ├── services/
+│   │   ├── auth.service.js
+│   │   ├── cart.service.js
+│   │   ├── products.service.js
+│   │   ├── review.service.js
+│   │   ├── users.service.js
+│   │   └── wishlist.service.js
+│   │
+│   ├── test/
+│   │   └── cart.utils.test.js
+│   │
+│   ├── utils/
+│   │   ├── common.utils.js
+│   │   └── errors.utils.js
+│   │
+│   ├── app.js
+│   └── server.js
+│
+├── .gitignore
+├── package-lock.json
+├── package.json
+└── prisma.config.js
+
+```
+
+---
+
+## Arquitectura
+
+El proyecto sigue una arquitectura en capas con separación clara de responsabilidades:
+
+- **Routes** → Definición de endpoints.
+- **Controllers** → Manejo de requests y responses HTTP.
+- **Services** → Lógica de negocio y acceso a datos.
+- **Middlewares** → Autenticación, validación y control de errores.
+- **Utils** → Funciones auxiliares reutilizables.
+- **Models** → Esquemas auxiliares (MongoDB).
+- **Prisma** → ORM principal para base de datos relacional.
+
+El flujo de una petición es:
+
+```text
+Request → Routes → Middlewares → Controllers → Services → Database → Response
+```
+
+---
+
+## Cómo ejecutar el proyecto
+
+Clonar el repositorio:
+
+```bash
+git clone https://github.com/joacocaturelli/projectBackEnd.git
+```
+
+Instalar dependencias:
+
+```bash
+npm install
+```
+
+Configurar variables de entorno:
+
+Crear un archivo `.env` con las variables necesarias (DB, JWT, Cloudinary, etc.).
+
+Ejecutar migraciones de Prisma:
+
+```bash
+npx prisma migrate dev
+```
+
+Iniciar el servidor en modo desarrollo:
+
+```bash
+npm run dev
+```
+
+Perfecto, pero ojo con algo importante: no conviene meter el link “pelado” sin contexto porque un profesor puede intentar abrir Swagger directo y pensar que está roto si no entiende la ruta base. Lo correcto es dejarlo bien explícito.
+
+Te dejo el bloque actualizado para que lo sustituyas en el README:
+
+---
+
+## Documentación de la API
+
+La API está documentada con Swagger.
+
+Una vez levantado el servidor, acceder a:
+
+```
+http://localhost:3000/api/docs
+```
+
+Desde allí se pueden visualizar y probar todos los endpoints disponibles.
+
+---
+
+## Despliegue
+
+El proyecto se encuentra desplegado en **Render** y puede accederse públicamente mediante la siguiente URL:
+
+```text
+https://backend-e-commerce-keoz.onrender.com
+```
+
+La documentación completa de la API está disponible en Swagger UI.
+Para acceder correctamente, se debe añadir la ruta:
+
+```text
+https://backend-e-commerce-keoz.onrender.com/api/docs
+```
+
+---
+
+## Aprendizajes
+
+Este proyecto permitió trabajar en:
+
+- Arquitectura backend modular con Express
+- Separación por capas (controllers/services/routes)
+- Integración de Prisma ORM
+- Autenticación con JWT y control de roles
+- Manejo de archivos con Multer y Cloudinary
+- Diseño de APIs REST completas
+- Validación y manejo centralizado de errores
+- Documentación de APIs con Swagger
+- Testing básico de utilidades
+
+---
+
+## Autor
+
+Joaquín Caturelli
