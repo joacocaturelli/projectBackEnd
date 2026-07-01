@@ -237,18 +237,15 @@ Desde allí se pueden visualizar y probar todos los endpoints disponibles.
 
 ## Despliegue
 
-El proyecto se encuentra desplegado en **Render** y puede accederse públicamente mediante la siguiente URL:
+El proyecto se encuentra desplegado en **Render** y puede accederse mediante el siguiente enlace:
 
-```text
-https://backend-e-commerce-keoz.onrender.com
-```
+[https://backend-e-commerce-keoz.onrender.com](https://backend-e-commerce-keoz.onrender.com)
 
-La documentación completa de la API está disponible en Swagger UI.
-Para acceder correctamente, se debe añadir la ruta:
+### Documentación de la API (Swagger)
 
-```text
-https://backend-e-commerce-keoz.onrender.com/api/docs
-```
+La documentación completa está disponible en Swagger UI:
+
+[https://backend-e-commerce-keoz.onrender.com/api/docs](https://backend-e-commerce-keoz.onrender.com/api/docs)
 
 ---
 
