@@ -12,7 +12,7 @@ export const registerUser = async (req, res, next) => {
 
   return res.status(201).json({
     ok: true,
-    data: result.data,
+    data: result.content,
   });
 };
 
