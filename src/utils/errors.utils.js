@@ -2,8 +2,8 @@ export const Selector = {
   BAD_INPUT: "badInput",
   MISSING_INPUT: "missingInput",
   WRONG_CRED: "wrongCredentials",
-  UNAUTHORIZED: "unauthorized",
   NO_TOKEN: "noToken",
+  UNAUTHORIZED: "unauthorized",
   NOT_FOUND: "notFound",
   BAD_ERROR: "badError",
 };
@@ -19,16 +19,16 @@ const errors = {
     message: "missing input data",
   },
   [Selector.WRONG_CRED]: {
-    statusCode: 400,
-    message: "incorrect credentials",
-  },
-  [Selector.UNAUTHORIZED]: {
     statusCode: 401,
-    message: "unauthorized",
+    message: "incorrect credentials",
   },
   [Selector.NO_TOKEN]: {
     statusCode: 401,
     message: "invalid token or expired",
+  },
+  [Selector.UNAUTHORIZED]: {
+    statusCode: 401,
+    message: "unauthorized",
   },
   [Selector.NOT_FOUND]: {
     statusCode: 404,
