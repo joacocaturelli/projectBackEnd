@@ -40,7 +40,10 @@ export const addToWishlist = async (userId, productId) => {
 
     return {
       ok: true,
-      content: result,
+      content: {
+        wishlistDocument: result,
+        productAdded: product,
+      },
     };
   } catch (error) {
     console.log("Error adding into wishlist", error.message);

@@ -11,7 +11,7 @@ export const getCart = async (userId) => {
     if (!result) {
       result = await prisma.cart.create({
         data: { userId },
-        include: { items: true },
+        include: { items: true, userId: false, createdAt: false },
       });
     }
 

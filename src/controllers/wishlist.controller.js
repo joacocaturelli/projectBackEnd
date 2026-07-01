@@ -39,6 +39,8 @@ export const removeFromWishlist = async (req, res, next) => {
 
   return res.json({
     ok: true,
-    data: result.content,
+    data: {
+      "Producto eliminado de la wishlist": result.content,
+    },
   });
 };

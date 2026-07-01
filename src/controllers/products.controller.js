@@ -115,6 +115,8 @@ export const deleteOneProduct = async (req, res, next) => {
 
   return res.json({
     ok: true,
-    data: result.content,
+    data: {
+      "Producto eliminado": result.content,
+    },
   });
 };

@@ -47,7 +47,7 @@ export const getUserById = async (id) => {
   try {
     const result = await prisma.user.findUnique({
       where: { id },
-      select: { email: true, role: true },
+      omit: { password: true },
     });
 
     if (!result) throw new Error("No se pudo obtener el usuario desde prisma");

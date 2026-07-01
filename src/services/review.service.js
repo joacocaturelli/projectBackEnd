@@ -41,6 +41,7 @@ export const getReviewByProduct = async (productId) => {
     const result = await Review.find(
       { productId },
       {
+        userId: true,
         rating: true,
         comment: true,
         _id: false,
@@ -100,7 +101,7 @@ export const updateReview = async (userId, productId, data) => {
     const result = await Review.findOneAndUpdate(
       { userId, productId },
       { $set: { rating: data.rating, comment: data.comment } },
-      { new: true },
+      { returnDocument: "after" },
     );
 
     if (!result) throw new Error("No se pudo actualizar la review desde Mongo");

@@ -93,6 +93,8 @@ export const deleteReview = async (req, res, next) => {
 
   return res.json({
     ok: true,
-    data: result.content,
+    data: {
+      "Review eliminada": result.content,
+    },
   });
 };
