@@ -4,13 +4,15 @@ import prisma from "../config/prismaClient.js";
 import { isString } from "../utils/common.utils.js";
 
 // Registrar un nuevo usuario
-export const registerUser = async ({ password, ...user }) => {
+export const registerUser = async ({ password, email }) => {
   try {
     // Hasheamos la contraseña y la guardamos
     const hashedPassword = await bcrypt.hash(isString(password), 10);
 
     // Creamos el usuario en la db con su mail, role y contraseña hasheada
-    const result = await prisma.user.create({ data: { ...user, password: hashedPassword } });
+    const result = await prisma.user.create({
+      data: { email, password: hashedPassword },
+    });
 
     if (!result) throw new Error("Prisma no pudo crear el usuario");
 

@@ -4,9 +4,9 @@ import { cookieOptions } from "../utils/common.utils.js";
 import { Selector } from "../utils/errors.utils.js";
 
 export const registerUser = async (req, res, next) => {
-  const { email, password, role } = req.body;
+  const { email, password } = req.body;
 
-  const result = await authService.registerUser({ email, password, role });
+  const result = await authService.registerUser({ email, password });
 
   if (!result.ok) return next(Selector.BAD_ERROR);
 
