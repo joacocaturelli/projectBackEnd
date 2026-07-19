@@ -37,7 +37,7 @@ const router = express.Router();
  *       404:
  *         $ref: "#/components/responses/NotFoundError"
  */
-router.get("/", authMiddleware, productsController.getProducts);
+router.get("/", productsController.getProducts);
 
 /**
  * @openapi
@@ -74,7 +74,7 @@ router.get("/", authMiddleware, productsController.getProducts);
  *       404:
  *         $ref: "#/components/responses/NotFoundError"
  */
-router.get("/:id", authMiddleware, productsController.getProduct);
+router.get("/:id", productsController.getProduct);
 
 /**
  * @openapi
@@ -115,7 +115,7 @@ router.get("/:id", authMiddleware, productsController.getProduct);
  *       404:
  *         $ref: "#/components/responses/NotFoundError"
  */
-router.get("/:productId/reviews", authMiddleware, getReviewByProduct);
+router.get("/:productId/reviews", getReviewByProduct);
 
 /**
  * @openapi
