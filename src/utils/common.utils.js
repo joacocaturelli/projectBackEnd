@@ -9,7 +9,7 @@ export const cookieOptions = {
 
 export const limiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 10,
+  max: 100,
   message: {
     ok: false,
     error: { message: "Demasiadas peticiones, intentalo en 1 minuto" },
