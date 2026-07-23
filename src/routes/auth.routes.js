@@ -41,7 +41,7 @@ const router = express.Router();
  *       500:
  *         $ref: "#/components/responses/ServerError"
  */
-router.post("/register", validate.obligatory(["email", "password"]), authController.registerUser);
+router.post("/register", validate.obligatory(["email", "password", "name"]), authController.registerUser);
 
 /**
  * @openapi

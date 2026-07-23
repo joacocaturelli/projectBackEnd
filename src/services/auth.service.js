@@ -4,14 +4,14 @@ import prisma from "../config/prismaClient.js";
 import { isString } from "../utils/common.utils.js";
 
 // Registrar un nuevo usuario
-export const registerUser = async ({ password, email }) => {
+export const registerUser = async ({ password, email, name }) => {
   try {
     // Hasheamos la contraseña y la guardamos
     const hashedPassword = await bcrypt.hash(isString(password), 10);
 
     // Creamos el usuario en la db con su mail, role y contraseña hasheada
     const result = await prisma.user.create({
-      data: { email, password: hashedPassword },
+      data: { email, password: hashedPassword, name },
     });
 
     if (!result) throw new Error("Prisma no pudo crear el usuario");
@@ -31,7 +31,7 @@ export const registerUser = async ({ password, email }) => {
 export const loginUser = async ({ email, password }) => {
   try {
     const user = await prisma.user.findUnique({
-      select: { id: true, password: true, role: true },
+      select: { id: true, password: true, role: true, name: true },
       where: { email }, // Buscamos el usuario por su email
     });
 
@@ -46,14 +46,24 @@ export const loginUser = async ({ email, password }) => {
         id: user.id,
         email,
         role: user.role,
+        name: user.name,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1h" },
     ); // Si es valida generamos el token
 
+    const userData = {
+      email,
+      role: user.role,
+      name: user.name,
+    };
+
     return {
       ok: true,
-      content: token,
+      content: {
+        token: token,
+        user: userData,
+      },
     };
   } catch (error) {
     console.log("Error logging user", error.message);

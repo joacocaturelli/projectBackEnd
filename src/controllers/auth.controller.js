@@ -4,9 +4,9 @@ import { cookieOptions } from "../utils/common.utils.js";
 import { Selector } from "../utils/errors.utils.js";
 
 export const registerUser = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
 
-  const result = await authService.registerUser({ email, password });
+  const result = await authService.registerUser({ email, password, name });
 
   if (!result.ok) return next(Selector.BAD_ERROR);
 
@@ -23,11 +23,11 @@ export const loginUser = async (req, res, next) => {
 
   if (!result.ok) return next(Selector.WRONG_CRED);
 
-  res.cookie("token", result.content, cookieOptions);
+  res.cookie("token", result.content.token, cookieOptions);
 
   return res.json({
     ok: true,
-    data: "Welcome",
+    data: result.content,
   });
 };
 

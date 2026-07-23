@@ -11,10 +11,11 @@ export const authMiddleware = (req, res, next) => {
 
     if (!user) return next(Selector.UNAUTHORIZED);
 
-    const { id, email, role } = user;
+    const { id, email, role, name } = user;
+    res.locals.id = isString(id);
     res.locals.email = email;
     res.locals.role = role;
-    res.locals.id = isString(id);
+    res.locals.name = name;
 
     next();
   } catch (error) {
