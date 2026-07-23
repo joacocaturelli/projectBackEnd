@@ -4,7 +4,7 @@ export const getProfile = async ({ email }) => {
   try {
     const result = await prisma.user.findUnique({
       where: { email },
-      select: { email: true, role: true },
+      omit: { password: true },
     });
 
     if (!result) throw new Error("No se pudo obtener el usuario desde prisma");
@@ -24,9 +24,7 @@ export const getProfile = async ({ email }) => {
 export const getUsers = async () => {
   try {
     const result = await prisma.user.findMany({
-      omit: {
-        password: true,
-      },
+      omit: { password: true },
     });
 
     if (!result) throw new Error("No se pudieron obtener los usuarios desde prisma");
