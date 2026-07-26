@@ -7,6 +7,7 @@ export const obligatory = (fields) => {
       const value = req.body[field];
 
       if (value === undefined || value === null || value === "") {
+        console.log("obligarory middleware");
         return next(Selector.BAD_INPUT);
       }
     }
@@ -31,12 +32,14 @@ export const necessaryOne = (fields) => {
     }
 
     if (valids.length === 0) {
+      console.log("necessaryOne middleware");
       return next(Selector.MISSING_INPUT);
     }
 
     if (invalids.length > 0) {
       for (const field of invalids) {
         if (field === null || field === "") {
+          console.log("necessaryOne middleware");
           return next(Selector.BAD_INPUT);
         }
       }
