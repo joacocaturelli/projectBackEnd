@@ -12,31 +12,31 @@ export const Selector = {
 const errors = {
   [Selector.BAD_INPUT]: {
     statusCode: 400,
-    message: "incorrect input data",
+    message: "Incorrect input data",
   },
   [Selector.MISSING_INPUT]: {
     statusCode: 400,
-    message: "missing input data",
+    message: "Missing input data",
   },
   [Selector.WRONG_CRED]: {
     statusCode: 401,
-    message: "incorrect credentials",
+    message: "Incorrect credentials",
   },
   [Selector.NO_TOKEN]: {
     statusCode: 401,
-    message: "invalid token or expired",
+    message: "Invalid token or expired",
   },
   [Selector.UNAUTHORIZED]: {
     statusCode: 401,
-    message: "unauthorized",
+    message: "Unauthorized",
   },
   [Selector.NOT_FOUND]: {
     statusCode: 404,
-    message: "resource not found",
+    message: "Resource not found",
   },
   [Selector.BAD_ERROR]: {
     statusCode: 500,
-    message: "something went wrong",
+    message: "Something went wrong",
   },
 };
 
