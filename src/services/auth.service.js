@@ -16,9 +16,16 @@ export const registerUser = async ({ password, email, name }) => {
 
     if (!result) throw new Error("Prisma no pudo crear el usuario");
 
+    const userData = {
+      id: result.id,
+      name: result.name,
+      email: result.email,
+      role: result.role,
+    };
+
     return {
       ok: true,
-      content: "User registered",
+      content: userData,
     };
   } catch (error) {
     console.log("Error registering user", error.message);
@@ -44,18 +51,19 @@ export const loginUser = async ({ email, password }) => {
     const token = jwt.sign(
       {
         id: user.id,
+        name: user.name,
         email,
         role: user.role,
-        name: user.name,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1h" },
     ); // Si es valida generamos el token
 
     const userData = {
+      id: user.id,
+      name: user.name,
       email,
       role: user.role,
-      name: user.name,
     };
 
     return {
