@@ -6,58 +6,89 @@ datasource db {
   provider = "postgresql"
 }
 
-model Product {
-  id            Int         @id @default(autoincrement())
-  name          String
-  description   String?
-  price         Decimal     @db.Decimal(10,2)
-  stock         Int?
-  imageUrl      String?     @map("image_url")
-  createdAt     DateTime    @default(now()) @map("created_at")
-
-  @@map("products")
-}
-
 model User {
-  id            Int         @id @default(autoincrement())
-  name          String      @default("Usuario")
-  email         String      @unique
+  id            String        @id @default(uuid())
+  name          String        @default("Usuario")
+  email         String        @unique
   password      String
-  role          Role        @default(USER)
-  createdAt     DateTime    @default(now()) @map("created_at")
+  role          Role          @default(USER)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  carts         Cart[]
+  orders        Order[]
 
   @@map("users")
 }
 
+model Product {
+  id            String        @id @default(uuid())
+  name          String
+  description   String?
+  price         Decimal       @db.Decimal(10,2)
+  stock         Int           @default(0)
+  imageUrl      String?       @map("image_url")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+
+  @@map("products")
+} 
+
 model Cart {
-  id            String      @id @default(uuid())
-  userId        String      @map("user_id")
-  status        CartStatus  @default(ACTIVE)
-  createdAt     DateTime    @default(now()) @map("created_at")
+  id            String        @id @default(uuid())
+  userId        String        @map("user_id")
+  status        CartStatus    @default(ACTIVE)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  user          User          @relation(fields: [userId], references: [id])
   items         CartItem[]
 
   @@map("carts")
 }
 
 model CartItem {
-  id            String      @id @default(uuid())
-  cartId        String      @map("cart_id")
-  productId     String      @map("product_id")
-  quantity      Int
+  id            String        @id @default(uuid())
+  cartId        String        @map("cart_id")
+  productId     String        @map("product_id")
+  quantity      Int           @default(1)
 
-  cart Cart @relation(fields: [cartId], references: [id])  
+  cart          Cart          @relation(fields: [cartId], references: [id])  
+  product       Product       @relation(fields: [productId], references: [id])
 
+  @@unique([cartId, productId])
   @@map("cart_items")
 }
 
 model Order {
-  id            String      @id @default(uuid())
-  userId        String      @map("user_id")
-  total         Float
-  createdAt     DateTime    @default(now()) @map("created_at")
+  id            String        @id @default(uuid())
+  userId        String        @map("user_id")
+  total         Decimal       @db.Decimal(10,2)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  user          User          @relation(fields: [userId], references: [id])
+  items         OrderItem[]
 
   @@map("orders")
 }
+
+model OrderItem {
+  id            String        @id @default(uuid())
+  orderId       String        @map("order_id")
+  productId     String        @map("product_id")
+  productName   String        @map("product_name")
+  quantity      Int
+  price         Decimal       @db.Decimal(10,2)
+
+  order         Order         @relation(fields: [orderId], references: [id])
+  product       Product       @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+} 
 
 enum CartStatus {
   ACTIVE
