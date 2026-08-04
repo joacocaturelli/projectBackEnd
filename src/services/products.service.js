@@ -1,14 +1,11 @@
 import prisma from "../config/prismaClient.js";
-import cloudinary from "../config/cloudinary.js";
+import { uploadImage } from "./cloudinary.service.js";
 
 export const getProducts = async (productsIds) => {
   try {
-    const result = await prisma.product.findMany({
-      omit: { createdAt: true },
-      where: { id: { in: productsIds } },
-    });
-
-    if (!result) throw new Error("Productos no obtenidos desde prisma");
+    // Si productsIds existe (enviados desde wishlist.service) devuelve solo los productos
+    // en la wishlist. Si productsIds no existe, trae todos los productos para el catalogo
+    const result = await prisma.product.findMany(productsIds ? { where: { id: { in: productsIds } } } : {});
 
     return {
       ok: true,
@@ -42,9 +39,26 @@ export const getProductById = async (id) => {
   }
 };
 
-export const createProduct = async (data) => {
+export const createProduct = async (data, file) => {
   try {
-    const result = await prisma.product.create({ data });
+    let imageUrl = data.imageUrl;
+
+    if (file) {
+      const imageResult = await uploadImage(file);
+
+      if (!imageResult.ok) {
+        throw new Error("Image upload failed");
+      }
+
+      imageUrl = imageResult.content.secure_url;
+    }
+
+    const result = await prisma.product.create({
+      data: {
+        ...data,
+        imageUrl,
+      },
+    });
 
     if (!result) throw new Error("Producto no creado desde prisma");
 
@@ -60,11 +74,26 @@ export const createProduct = async (data) => {
   }
 };
 
-export const updateProduct = async (id, data) => {
+export const updateProduct = async (id, data, file) => {
   try {
+    let imageUrl = data.imageUrl;
+
+    if (file) {
+      const imageResult = await uploadImage(file);
+
+      if (!imageResult.ok) {
+        throw new Error("Image upload failed");
+      }
+
+      imageUrl = imageResult.content.secure_url;
+    }
+
     const result = await prisma.product.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        ...(imageUrl && { imageUrl }),
+      },
     });
 
     if (!result) throw new Error("Producto no actualizado desde prisma");
@@ -113,29 +142,6 @@ export const deleteProduct = async (id) => {
     }
 
     console.log("Error deleting product", error.message);
-    return {
-      ok: false,
-    };
-  }
-};
-
-export const uploadImage = async (file) => {
-  try {
-    const result = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream({ folder: "products" }, (error, result) => {
-        if (error) return reject(error);
-
-        resolve(result);
-      });
-
-      stream.end(file.buffer);
-    });
-
-    return {
-      ok: true,
-      content: result,
-    };
-  } catch (error) {
     return {
       ok: false,
     };
