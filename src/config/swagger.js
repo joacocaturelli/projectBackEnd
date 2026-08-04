@@ -27,14 +27,16 @@ export const swaggerSpec = swaggerJSDoc({
         User: {
           type: "object",
           properties: {
-            id: { type: "integer", example: 1 },
+            id: { type: "string", example: "3b6pj70d-5652-4547-95ad-43fe157e7b98" },
+            name: { type: "string", example: "User1278" },
             email: { type: "string", example: "test@mail.com" },
             role: {
               type: "string",
               enum: ["USER", "ADMIN"],
               example: "USER",
             },
-            createdAt: { type: "string", format: "date-time" },
+            createdAt: { type: "string", format: "date-time", example: "2026-08-01T14:30:15.123Z" },
+            updatedAt: { type: "string", format: "date-time", example: "2026-08-01T14:30:15.123Z" },
           },
         },
 
@@ -45,6 +47,7 @@ export const swaggerSpec = swaggerJSDoc({
           type: "object",
           properties: {
             email: { type: "string", example: "test@mail.com" },
+            name: { type: "string", example: "User1278" },
             role: {
               type: "string",
               enum: ["USER", "ADMIN"],
@@ -59,26 +62,14 @@ export const swaggerSpec = swaggerJSDoc({
         Product: {
           type: "object",
           properties: {
-            id: { type: "integer", example: 1 },
+            id: { type: "string", example: "3b64470d-5652-4547-95ad-43fe157e7b9f" },
             name: { type: "string", example: "iPhone 15" },
             description: { type: "string", nullable: true },
-            price: { type: "number", example: 999.99 },
+            price: { type: "string", example: 999.99 },
             stock: { type: "integer", example: 10 },
             imageUrl: { type: "string", nullable: true },
-            createdAt: { type: "string", format: "date-time" },
-          },
-        },
-
-        // =====================
-        // CART ITEM
-        // =====================
-        CartItem: {
-          type: "object",
-          properties: {
-            id: { type: "string" },
-            cartId: { type: "string" },
-            productId: { type: "string", example: "2" },
-            quantity: { type: "integer", example: 1 },
+            createdAt: { type: "string", format: "date-time", example: "2026-08-01T14:30:15.123Z" },
+            updatedAt: { type: "string", format: "date-time", example: "2026-08-01T14:30:15.123Z" },
           },
         },
 
@@ -88,17 +79,31 @@ export const swaggerSpec = swaggerJSDoc({
         Cart: {
           type: "object",
           properties: {
-            id: { type: "string" },
-            userId: { type: "string" },
+            id: { type: "string", example: "3b64470d-5652-4547-95ad-43fe157e7b9f" },
+            userId: { type: "string", example: "3b64470d-5652-4547-95ad-43fe157e7b9f" },
             status: {
               type: "string",
               enum: ["ACTIVE", "CHECKED_OUT"],
             },
-            createdAt: { type: "string", format: "date-time" },
+            createdAt: { type: "string", format: "date-time", example: "2026-08-01T14:30:15.123Z" },
+            updatedAt: { type: "string", format: "date-time", example: "2026-08-01T14:30:15.123Z" },
             items: {
               type: "array",
               items: { $ref: "#/components/schemas/CartItem" },
             },
+          },
+        },
+
+        // =====================
+        // CART ITEM
+        // =====================
+        CartItem: {
+          type: "object",
+          properties: {
+            id: { type: "string", example: "3b64470d-5652-4547-95ad-43fe157e7b9f" },
+            cartId: { type: "string", example: "3b64470d-5652-4547-95ad-43fe157e7b9f" },
+            productId: { type: "string", example: "3b64470d-5652-4547-95ad-43fe157e7b9f" },
+            quantity: { type: "integer", example: 1 },
           },
         },
 
@@ -109,12 +114,12 @@ export const swaggerSpec = swaggerJSDoc({
           type: "object",
           properties: {
             _id: { type: "string" },
-            productId: { type: "string" },
-            userId: { type: "string" },
+            productId: { type: "string", example: "3b64470d-5652-4547-95ad-43fe157e7b9f" },
+            userId: { type: "string", example: "3b64470d-5652-4547-95ad-43fe157e7b9f" },
             rating: { type: "integer", minimum: 1, maximum: 5 },
             comment: { type: "string" },
-            createdAt: { type: "string", format: "date-time" },
-            updatedAt: { type: "string", format: "date-time" },
+            createdAt: { type: "string", format: "date-time", example: "2026-08-01T14:30:15.123Z" },
+            updatedAt: { type: "string", format: "date-time", example: "2026-08-01T14:30:15.123Z" },
           },
         },
 
@@ -155,10 +160,11 @@ export const swaggerSpec = swaggerJSDoc({
         Order: {
           type: "object",
           properties: {
-            id: { type: "string" },
-            userId: { type: "string" },
-            total: { type: "number" },
-            createdAt: { type: "string", format: "date-time" },
+            id: { type: "string", example: "3b64470d-5652-4547-95ad-43fe157e7b9f" },
+            userId: { type: "string", example: "3b64470d-5652-4547-95ad-43fe157e7b9f" },
+            total: { type: "string" },
+            createdAt: { type: "string", format: "date-time", example: "2026-08-01T14:30:15.123Z" },
+            updatedAt: { type: "string", format: "date-time", example: "2026-08-01T14:30:15.123Z" },
             items: {
               type: "array",
               items: { $ref: "#/components/schemas/OrderItem" },
@@ -177,7 +183,7 @@ export const swaggerSpec = swaggerJSDoc({
             productId: { type: "string" },
             productName: { type: "string", example: "iPhone 15" },
             quantity: { type: "integer", example: 2 },
-            price: { type: "number", example: 999.99 },
+            price: { type: "string", example: 999.99 },
           },
         },
 
@@ -216,7 +222,7 @@ export const swaggerSpec = swaggerJSDoc({
           properties: {
             name: { type: "string", example: "iPhone 15" },
             description: { type: "string" },
-            price: { type: "number", example: 999.99 },
+            price: { type: "string", example: 999.99 },
             stock: { type: "integer", example: 10 },
             imageUrl: { type: "string" },
           },
@@ -230,7 +236,7 @@ export const swaggerSpec = swaggerJSDoc({
           properties: {
             name: { type: "string" },
             description: { type: "string" },
-            price: { type: "number" },
+            price: { type: "string" },
             stock: { type: "integer" },
             imageUrl: { type: "string" },
           },
