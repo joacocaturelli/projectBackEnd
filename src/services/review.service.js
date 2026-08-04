@@ -30,10 +30,8 @@ export const getReviewByUser = async (userId) => {
 
 export const getReviewByProduct = async (productId) => {
   try {
-    const id = Number(productId);
-
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id: productId },
     });
 
     if (!product) throw new Error("Producto no encontrado desde Prisma");
@@ -64,10 +62,8 @@ export const getReviewByProduct = async (productId) => {
 
 export const createReview = async (userId, productId, rating, comment) => {
   try {
-    const id = Number(productId);
-
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id: productId },
     });
 
     if (!product) throw new Error("Producto no encontrado desde Prisma");
@@ -81,6 +77,15 @@ export const createReview = async (userId, productId, rating, comment) => {
       content: result,
     };
   } catch (error) {
+    if (error.code === 11000) {
+      console.log("Error al crear la review", error.message);
+
+      return {
+        ok: false,
+        error: "Review already exists",
+      };
+    }
+
     console.log("Error al crear la review", error.message);
     return {
       ok: false,
@@ -90,17 +95,24 @@ export const createReview = async (userId, productId, rating, comment) => {
 
 export const updateReview = async (userId, productId, data) => {
   try {
-    const id = Number(productId);
-
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id: productId },
     });
 
     if (!product) throw new Error("Producto no encontrado desde Prisma");
 
+    const updateData = {};
+    if (data.rating !== undefined) {
+      updateData.rating = data.rating;
+    }
+
+    if (data.comment !== undefined) {
+      updateData.comment = data.comment;
+    }
+
     const result = await Review.findOneAndUpdate(
       { userId, productId },
-      { $set: { rating: data.rating, comment: data.comment } },
+      { $set: updateData },
       { returnDocument: "after" },
     );
 
@@ -121,10 +133,8 @@ export const updateReview = async (userId, productId, data) => {
 
 export const deleteReview = async (userId, productId) => {
   try {
-    const id = Number(productId);
-
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id: productId },
     });
 
     if (!product) throw new Error("Producto no encontrado desde Prisma");
