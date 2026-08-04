@@ -35,8 +35,6 @@ const router = express.Router();
  *                     $ref: "#/components/schemas/Order"
  *       401:
  *         $ref: "#/components/responses/NoTokenError"
- *       404:
- *         $ref: "#/components/responses/NotFoundError"
  */
 router.get("/", authMiddleware, orderController.getUserOrders);
 
@@ -76,6 +74,8 @@ router.get("/", authMiddleware, orderController.getUserOrders);
  *                   $ref: "#/components/schemas/Order"
  *       401:
  *         $ref: "#/components/responses/NoTokenError"
+ *       404:
+ *         $ref: "#/components/responses/NotFoundError"
  *       500:
  *         $ref: "#/components/responses/ServerError"
  */
