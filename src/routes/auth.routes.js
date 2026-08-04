@@ -1,7 +1,8 @@
 import express from "express";
 import * as authController from "../controllers/auth.controller.js";
-import { authMiddleware } from "../middlewares/auth.middleware.js";
 import * as validate from "../middlewares/validate.middleware.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { authLimiter } from "../utils/common.utils.js";
 
 const router = express.Router();
 
@@ -41,7 +42,13 @@ const router = express.Router();
  *       500:
  *         $ref: "#/components/responses/ServerError"
  */
-router.post("/register", validate.obligatory(["email", "password", "name"]), authController.registerUser);
+router.post(
+  "/register",
+  authLimiter,
+  validate.obligatory(["email", "password", "name"]),
+  validate.Register,
+  authController.registerUser,
+);
 
 /**
  * @openapi
@@ -85,7 +92,12 @@ router.post("/register", validate.obligatory(["email", "password", "name"]), aut
  *       500:
  *         $ref: "#/components/responses/ServerError"
  */
-router.post("/login", validate.obligatory(["email", "password"]), authController.loginUser);
+router.post(
+  "/login",
+  authLimiter,
+  validate.obligatory(["email", "password"]),
+  authController.loginUser,
+);
 
 /**
  * @openapi

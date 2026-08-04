@@ -40,49 +40,6 @@ router.get("/", authMiddleware, reviewController.getReviewByUser);
 
 /**
  * @openapi
- * /api/reviews:
- *   post:
- *     summary: Crear una review
- *     description: >
- *       Crea una review pasando `productId` en el body.
- *       Un usuario solo puede tener una review por producto
- *       El campo `rating` debe ser un número entero entre 1 y 5.
- *     tags:
- *       - Reviews
- *     security:
- *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: "#/components/schemas/ReviewCreate"
- *     responses:
- *       201:
- *         description: Review creada correctamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 ok:
- *                   type: boolean
- *                   example: true
- *                 data:
- *                   $ref: "#/components/schemas/Review"
- *       400:
- *         $ref: "#/components/responses/BadInputError"
- *       401:
- *         $ref: "#/components/responses/NoTokenError"
- *       409:
- *         $ref: "#/components/responses/ConflictError"
- *       500:
- *         $ref: "#/components/responses/ServerError"
- */
-router.post("/", authMiddleware, validate.obligatory(["rating", "productId"]), reviewController.createReview);
-
-/**
- * @openapi
  * /api/reviews/{productId}:
  *   put:
  *     summary: Actualizar la review del usuario sobre un producto
@@ -90,7 +47,7 @@ router.post("/", authMiddleware, validate.obligatory(["rating", "productId"]), r
  *       Actualiza la review del usuario autenticado sobre el producto indicado.
  *       Al menos uno de los campos (`rating` o `comment`) es obligatorio.
  *       Si se envía `rating`, debe ser un número entero entre 1 y 5.
- *       Devuelve el documento Mongo completo actualizado (con `{ new: true }`).
+ *       Devuelve el documento Mongo completo actualizado.
  *     tags:
  *       - Reviews
  *     security:
@@ -99,10 +56,10 @@ router.post("/", authMiddleware, validate.obligatory(["rating", "productId"]), r
  *       - in: path
  *         name: productId
  *         required: true
- *         description: ID del producto en Prisma
+ *         description: UUID del producto en Prisma
  *         schema:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
  *     requestBody:
  *       required: true
  *       content:
@@ -126,10 +83,17 @@ router.post("/", authMiddleware, validate.obligatory(["rating", "productId"]), r
  *         $ref: "#/components/responses/BadInputError"
  *       401:
  *         $ref: "#/components/responses/NoTokenError"
+ *       404:
+ *         $ref: "#/components/responses/NotFoundError"
  *       500:
  *         $ref: "#/components/responses/ServerError"
  */
-router.put("/:productId", authMiddleware, validate.necessaryOne(["rating", "comment"]), reviewController.updateReview);
+router.put(
+  "/:productId",
+  authMiddleware,
+  validate.necessaryOne(["rating", "comment"]),
+  reviewController.updateReview,
+);
 
 /**
  * @openapi
@@ -147,10 +111,10 @@ router.put("/:productId", authMiddleware, validate.necessaryOne(["rating", "comm
  *       - in: path
  *         name: productId
  *         required: true
- *         description: ID del producto en Prisma
+ *         description: UUID del producto en Prisma
  *         schema:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
  *     responses:
  *       200:
  *         description: Review eliminada. Devuelve el documento eliminado.
@@ -166,6 +130,8 @@ router.put("/:productId", authMiddleware, validate.necessaryOne(["rating", "comm
  *                   $ref: "#/components/schemas/Review"
  *       401:
  *         $ref: "#/components/responses/NoTokenError"
+ *       404:
+ *         $ref: "#/components/responses/NotFoundError"
  *       500:
  *         $ref: "#/components/responses/ServerError"
  */

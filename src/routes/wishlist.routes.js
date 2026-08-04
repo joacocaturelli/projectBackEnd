@@ -47,8 +47,9 @@ router.get("/", authMiddleware, wishListController.getWishlistByUser);
  *     summary: Añadir un producto a la wishlist
  *     description: >
  *       Verifica que el producto exista en Prisma y crea el documento en Mongo.
- *       Un usuario no puede tener el mismo producto dos veces en la wishlist
- *       Devuelve el documento Mongo creado (WishlistDocument) y el producto.
+ *       Un usuario no puede tener el mismo producto dos veces en la wishlist.
+ *       Si intenta, devuelve 409 Conflict.
+ *       Devuelve el documento Mongo creado (WishlistDocument).
  *     tags:
  *       - Wishlist
  *     security:
@@ -57,10 +58,10 @@ router.get("/", authMiddleware, wishListController.getWishlistByUser);
  *       - in: path
  *         name: productId
  *         required: true
- *         description: ID del producto en Prisma
+ *         description: UUID del producto en Prisma
  *         schema:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
  *     responses:
  *       201:
  *         description: Producto añadido a la wishlist correctamente
@@ -79,7 +80,10 @@ router.get("/", authMiddleware, wishListController.getWishlistByUser);
  *       404:
  *         $ref: "#/components/responses/NotFoundError"
  *       409:
+ *         description: El producto ya está en la wishlist del usuario
  *         $ref: "#/components/responses/ConflictError"
+ *       500:
+ *         $ref: "#/components/responses/ServerError"
  */
 router.post("/add/:productId", authMiddleware, wishListController.addToWishlist);
 
@@ -99,10 +103,10 @@ router.post("/add/:productId", authMiddleware, wishListController.addToWishlist)
  *       - in: path
  *         name: productId
  *         required: true
- *         description: ID del producto en Prisma
+ *         description: UUID del producto en Prisma
  *         schema:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
  *     responses:
  *       200:
  *         description: Producto eliminado de la wishlist. Devuelve el documento eliminado.
@@ -120,6 +124,8 @@ router.post("/add/:productId", authMiddleware, wishListController.addToWishlist)
  *         $ref: "#/components/responses/NoTokenError"
  *       404:
  *         $ref: "#/components/responses/NotFoundError"
+ *       500:
+ *         $ref: "#/components/responses/ServerError"
  */
 router.delete("/:productId", authMiddleware, wishListController.removeFromWishlist);
 

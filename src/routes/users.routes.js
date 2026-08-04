@@ -85,10 +85,10 @@ router.get("/", authMiddleware, requiredRole, userControllers.getUsers);
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID del usuario en Prisma
+ *         description: UUID del usuario en Prisma
  *         schema:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
  *     responses:
  *       200:
  *         description: Usuario encontrado
@@ -103,9 +103,13 @@ router.get("/", authMiddleware, requiredRole, userControllers.getUsers);
  *                 data:
  *                   $ref: "#/components/schemas/UserProfile"
  *       401:
+ *         $ref: "#/components/responses/NoTokenError"
+ *       403:
  *         $ref: "#/components/responses/UnauthorizedError"
  *       404:
  *         $ref: "#/components/responses/NotFoundError"
+ *       500:
+ *         $ref: "#/components/responses/ServerError"
  */
 router.get("/:id", authMiddleware, requiredRole, userControllers.getUserById);
 
@@ -115,7 +119,8 @@ router.get("/:id", authMiddleware, requiredRole, userControllers.getUserById);
  *   put:
  *     summary: Actualizar el rol de un usuario (solo ADMIN)
  *     description: >
- *       Requiere rol ADMIN. Actualmente solo permite cambiar el campo `role`.
+ *       Requiere rol ADMIN. Actualiza el rol de otro usuario.
+ *       El campo `role` es obligatorio y debe ser "USER" o "ADMIN".
  *       Devuelve el usuario completo actualizado sin `password`
  *     tags:
  *       - Users
@@ -125,10 +130,10 @@ router.get("/:id", authMiddleware, requiredRole, userControllers.getUserById);
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID del usuario en Prisma
+ *         description: UUID del usuario en Prisma
  *         schema:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
  *     requestBody:
  *       required: true
  *       content:
@@ -149,13 +154,23 @@ router.get("/:id", authMiddleware, requiredRole, userControllers.getUserById);
  *                 data:
  *                   $ref: "#/components/schemas/User"
  *       400:
- *         $ref: "#/components/responses/MissingInputError"
+ *         $ref: "#/components/responses/BadInputError"
  *       401:
+ *         $ref: "#/components/responses/NoTokenError"
+ *       403:
  *         $ref: "#/components/responses/UnauthorizedError"
  *       404:
  *         $ref: "#/components/responses/NotFoundError"
+ *       500:
+ *         $ref: "#/components/responses/ServerError"
  */
-router.put("/:id", authMiddleware, requiredRole, validate.obligatory(["role"]), userControllers.updateUser);
+router.put(
+  "/:id",
+  authMiddleware,
+  requiredRole,
+  validate.obligatory(["role"]),
+  userControllers.updateUser,
+);
 
 /**
  * @openapi
@@ -163,9 +178,9 @@ router.put("/:id", authMiddleware, requiredRole, validate.obligatory(["role"]), 
  *   delete:
  *     summary: Eliminar un usuario (solo ADMIN)
  *     description: >
- *       Requiere rol ADMIN. Devuelve el objeto User completo que fue eliminado
- *       (sin `password`).
- *       Devuelve 404 si el usuario no existe (código Prisma P2025).
+ *       Requiere rol ADMIN. Elimina el usuario de forma permanente.
+ *       Devuelve el objeto User completo que fue eliminado (sin `password`).
+ *       Devuelve 404 si el usuario no existe.
  *     tags:
  *       - Users
  *     security:
@@ -174,10 +189,10 @@ router.put("/:id", authMiddleware, requiredRole, validate.obligatory(["role"]), 
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID del usuario en Prisma
+ *         description: UUID del usuario en Prisma
  *         schema:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
  *     responses:
  *       200:
  *         description: Usuario eliminado. Devuelve el objeto eliminado.
@@ -192,9 +207,13 @@ router.put("/:id", authMiddleware, requiredRole, validate.obligatory(["role"]), 
  *                 data:
  *                   $ref: "#/components/schemas/User"
  *       401:
+ *         $ref: "#/components/responses/NoTokenError"
+ *       403:
  *         $ref: "#/components/responses/UnauthorizedError"
  *       404:
  *         $ref: "#/components/responses/NotFoundError"
+ *       500:
+ *         $ref: "#/components/responses/ServerError"
  */
 router.delete("/:id", authMiddleware, requiredRole, userControllers.deleteUser);
 
