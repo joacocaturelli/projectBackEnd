@@ -9,20 +9,21 @@ export const getCart = async (req, res, next) => {
 
   if (!result.ok) return next(Selector.BAD_ERROR);
 
-  res.json({
+  return res.json({
     ok: true,
     data: result.content,
   });
 };
 
 export const getCartById = async (req, res, next) => {
-  const id = req.params.cartId;
+  const cartId = req.params.cartId;
+  const { id: userId } = res.locals;
 
-  const result = await cartService.getCartById(id);
+  const result = await cartService.getCartById(cartId, userId);
 
   if (!result.ok) return next(Selector.NOT_FOUND);
 
-  res.json({
+  return res.json({
     ok: true,
     data: result.content,
   });
@@ -32,14 +33,34 @@ export const addItem = async (req, res, next) => {
   const { productId, quantity } = req.body;
   const { id } = res.locals;
 
-  const resultQuantity = needNumber(quantity);
-  if (!resultQuantity.ok) return next(Selector.BAD_INPUT);
+  let validateQuantity;
+  if (quantity !== undefined) {
+    const quantityResult = needNumber(quantity, { integer: true });
 
-  const result = await cartService.addItem(id, productId, resultQuantity.content);
+    if (!quantityResult.ok) return next(Selector.BAD_INPUT);
+    validateQuantity = quantityResult.content;
+  }
+
+  const result = await cartService.addItem(id, productId, validateQuantity);
+
+  if (result.error) return next(Selector.BAD_INPUT);
+  if (!result.ok) return next(Selector.NOT_FOUND);
+
+  return res.status(201).json({
+    ok: true,
+    data: result.content,
+  });
+};
+
+export const removeItem = async (req, res, next) => {
+  const { productId } = req.body;
+  const { id } = res.locals;
+
+  const result = await cartService.removeItem(id, productId);
 
   if (!result.ok) return next(Selector.BAD_ERROR);
 
-  res.status(201).json({
+  return res.json({
     ok: true,
     data: result.content,
   });
@@ -52,7 +73,7 @@ export const checkOut = async (req, res, next) => {
 
   if (!result.ok) return next(Selector.BAD_ERROR);
 
-  res.json({
+  return res.json({
     ok: true,
     data: result.content,
   });
