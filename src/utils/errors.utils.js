@@ -5,6 +5,7 @@ export const Selector = {
   NO_TOKEN: "noToken",
   UNAUTHORIZED: "unauthorized",
   NOT_FOUND: "notFound",
+  CONFLICT: "conflict",
   BAD_ERROR: "badError",
 };
 
@@ -33,6 +34,10 @@ const errors = {
   [Selector.NOT_FOUND]: {
     statusCode: 404,
     message: "Resource not found",
+  },
+  [Selector.CONFLICT]: {
+    statusCode: 409,
+    message: "Resource already exists",
   },
   [Selector.BAD_ERROR]: {
     statusCode: 500,
