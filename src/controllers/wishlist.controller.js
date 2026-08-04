@@ -1,5 +1,4 @@
 import * as wishlistService from "../services/wishlist.service.js";
-import { isString } from "../utils/common.utils.js";
 import { Selector } from "../utils/errors.utils.js";
 
 export const getWishlistByUser = async (req, res, next) => {
@@ -21,6 +20,7 @@ export const addToWishlist = async (req, res, next) => {
 
   const result = await wishlistService.addToWishlist(id, productId);
 
+  if (result.error) return next(Selector.CONFLICT);
   if (!result.ok) return next(Selector.NOT_FOUND);
 
   return res.status(201).json({
@@ -33,14 +33,12 @@ export const removeFromWishlist = async (req, res, next) => {
   const { productId } = req.params;
   const { id } = res.locals;
 
-  const result = await wishlistService.removeFromWishlist(isString(id), productId);
+  const result = await wishlistService.removeFromWishlist(id, productId);
 
   if (!result.ok) return next(Selector.NOT_FOUND);
 
   return res.json({
     ok: true,
-    data: {
-      "Producto eliminado de la wishlist": result.content,
-    },
+    data: result.content,
   });
 };
