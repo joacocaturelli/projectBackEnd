@@ -13,9 +13,10 @@ import reviewsRoutes from "./routes/review.routes.js";
 import userRoutes from "./routes/users.routes.js";
 import wishListRoutes from "./routes/wishlist.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
+import orderRoutes from "./routes/orders.routes.js";
 
-import { Selector } from "./utils/errors.utils.js";
 import errorHandler from "./middlewares/errorHandler.middleware.js";
+import { Selector } from "./utils/errors.utils.js";
 import { limiter } from "./utils/common.utils.js";
 
 const app = express();
@@ -50,6 +51,7 @@ app.use("/api/reviews", reviewsRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/wishlist", wishListRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.use((req, res, next) => {
   return next(Selector.NOT_FOUND);
