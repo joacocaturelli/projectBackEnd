@@ -4,9 +4,9 @@ import { Prisma } from "@prisma/client";
 // Obtenemos el carrito active del user y si no tiene se lo creamos
 export const getCart = async (userId) => {
   try {
-    let result = await prisma.cart.findFirst({
+    let result = await prisma.cart.findUnique({
       where: { userId, status: "ACTIVE" },
-      include: { items: true },
+      include: { items: { include: { product: true } } },
     });
 
     if (!result) {
@@ -23,7 +23,7 @@ export const getCart = async (userId) => {
       content: result,
     };
   } catch (error) {
-    console.log("Error geting cart:", error.message);
+    console.log("Error getting cart:", error.message);
     return {
       ok: false,
     };
@@ -35,7 +35,7 @@ export const getCartById = async (cartId, userId) => {
   try {
     let result = await prisma.cart.findUnique({
       where: { id: cartId },
-      include: { items: true },
+      include: { items: { include: { product: true } } },
     });
 
     if (!result) throw new Error("No se pudo obtener el carrito desde prisma");
@@ -47,7 +47,7 @@ export const getCartById = async (cartId, userId) => {
       content: result,
     };
   } catch (error) {
-    console.log("Error geting cart:", error.message);
+    console.log("Error getting cart:", error.message);
     return {
       ok: false,
     };
@@ -58,17 +58,21 @@ export const getCartById = async (cartId, userId) => {
 export const addItem = async (userId, productId, quantity = 1) => {
   try {
     // Comprobar que el producto exista en la base de datos
-    const product = await prisma.product.findFirst({
+    const product = await prisma.product.findUnique({
       where: { id: productId },
     });
 
     if (!product) throw new Error("Producto no encontrado");
 
     // Extraemos los datos del carrito y lo guardamos como cart
-    const { content: cart } = await getCart(userId);
+    const cartResult = await getCart(userId);
+
+    if (!cartResult.ok) throw new Error("No se pudo obtener el carrito");
+
+    const cart = cartResult.content;
 
     // Comprobar si existe el producto en el carrito
-    const existingItem = await prisma.cartItem.findFirst({
+    const existingItem = await prisma.cartItem.findUnique({
       where: { cartId: cart.id, productId },
     });
 
@@ -158,7 +162,7 @@ export const checkOut = async (userId) => {
     // cancelando todas las peticiones
     await prisma.$transaction(async (tx) => {
       // Buscamos el carrito activo
-      const cart = await tx.cart.findFirst({
+      const cart = await tx.cart.findUnique({
         where: {
           userId,
           status: "ACTIVE",
@@ -197,7 +201,7 @@ export const checkOut = async (userId) => {
       for (const item of cart.items) {
         const product = productsMap[item.productId];
 
-        if (!product) throw new Error("Producto no econtrado");
+        if (!product) throw new Error("Producto no encontrado");
 
         // Volvemos a checkear el stock por si otro usuario hizo una compra
         if (product.stock < item.quantity) {
@@ -249,11 +253,11 @@ export const checkOut = async (userId) => {
       ok: true,
       content: await prisma.order.findUnique({
         where: { id: order.id },
-        include: { items: true },
+        include: { items: { include: { product: true } } },
       }),
     };
   } catch (error) {
-    console.log("Error doing cheking out:", error.message);
+    console.log("Error doing checking out:", error.message);
     return {
       ok: false,
     };
