@@ -159,6 +159,25 @@ export const swaggerSpec = swaggerJSDoc({
             userId: { type: "string" },
             total: { type: "number" },
             createdAt: { type: "string", format: "date-time" },
+            items: {
+              type: "array",
+              items: { $ref: "#/components/schemas/OrderItem" },
+            },
+          },
+        },
+
+        // =====================
+        // ORDER ITEM
+        // =====================
+        OrderItem: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            orderId: { type: "string" },
+            productId: { type: "string" },
+            productName: { type: "string", example: "iPhone 15" },
+            quantity: { type: "integer", example: 2 },
+            price: { type: "number", example: 999.99 },
           },
         },
 
@@ -205,7 +224,9 @@ export const swaggerSpec = swaggerJSDoc({
 
         UpdateProduct: {
           type: "object",
-          description: "Al menos uno de los campos es obligatorio. " + "Si se envían price o stock, deben ser números.",
+          description:
+            "Al menos uno de los campos es obligatorio. " +
+            "Si se envían price o stock, deben ser números.",
           properties: {
             name: { type: "string" },
             description: { type: "string" },
@@ -252,7 +273,8 @@ export const swaggerSpec = swaggerJSDoc({
         ReviewPut: {
           type: "object",
           description:
-            "Al menos uno de los dos campos es obligatorio. " + "Si se envía rating, debe ser un número entre 1 y 5.",
+            "Al menos uno de los dos campos es obligatorio. " +
+            "Si se envía rating, debe ser un número entre 1 y 5.",
           properties: {
             rating: { type: "integer", minimum: 1, maximum: 5, example: 5 },
             comment: { type: "string", example: "Actualizado: excelente" },
@@ -341,6 +363,17 @@ export const swaggerSpec = swaggerJSDoc({
             "application/json": {
               schema: { $ref: "#/components/schemas/ErrorResponse" },
               example: { ok: false, error: "resource not found" },
+            },
+          },
+        },
+
+        // 409 - CONFLICT
+        ConflictError: {
+          description: "Conflicto de datos - recurso ya existe (CONFLICT)",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/ErrorResponse" },
+              example: { ok: false, error: "resource already exists" },
             },
           },
         },
