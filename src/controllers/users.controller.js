@@ -26,7 +26,7 @@ export const getUsers = async (req, res, next) => {
 };
 
 export const getUserById = async (req, res, next) => {
-  const id = parseInt(req.params.id);
+  const id = req.params.id;
 
   const result = await usersService.getUserById(id);
 
@@ -39,13 +39,18 @@ export const getUserById = async (req, res, next) => {
 };
 
 export const updateUser = async (req, res, next) => {
+  const id = req.params.id;
   const { role } = req.body;
-  const id = parseInt(req.params.id);
 
-  const result = await usersService.updateUser(id, { role });
+  const roles = ["ADMIN", "USER"];
+  const upperRole = role.toUpperCase();
+
+  // Comprobamos que el rol sea correcto
+  if (!roles.includes(upperRole)) return next(Selector.BAD_INPUT);
+
+  const result = await usersService.updateUser(id, { role: upperRole });
 
   if (result.error) return next(Selector.NOT_FOUND);
-
   if (!result.ok) return next(Selector.BAD_ERROR);
 
   return res.json({
@@ -55,7 +60,7 @@ export const updateUser = async (req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => {
-  const id = parseInt(req.params.id);
+  const id = req.params.id;
 
   const result = await usersService.deleteUser(id);
 
@@ -65,8 +70,6 @@ export const deleteUser = async (req, res, next) => {
 
   return res.json({
     ok: true,
-    data: {
-      "User eliminado": result.content,
-    },
+    data: result.content,
   });
 };
