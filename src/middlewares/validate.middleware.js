@@ -6,7 +6,7 @@ export const obligatory = (fields) => {
     for (const field of fields) {
       const value = req.body[field];
 
-      if (value === undefined || value === null || value === "") {
+      if (value === undefined || value === null || value === "" || !value) {
         console.log("obligarory middleware");
         return next(Selector.BAD_INPUT);
       }
@@ -16,35 +16,51 @@ export const obligatory = (fields) => {
   };
 };
 
-export const necessaryOne = (fields) => {
+export const necessaryOne = (fields, options = {}) => {
   return (req, res, next) => {
-    let valids = [];
-    let invalids = [];
+    let hasValue = false;
 
     for (const field of fields) {
       const value = req.body[field];
 
       if (value !== undefined && value !== null && value !== "") {
-        valids.push(value);
-      } else {
-        invalids.push(value);
+        hasValue = true;
+        break;
       }
     }
 
-    if (valids.length === 0) {
+    // options.file comprueba si el middleware fue configurado para aceptar file
+    // req. file comprueba si el usuario envio un archivo
+    if (options.file && req.file) {
+      hasValue = true;
+    }
+
+    if (!hasValue) {
       console.log("necessaryOne middleware");
       return next(Selector.MISSING_INPUT);
     }
 
-    if (invalids.length > 0) {
-      for (const field of invalids) {
-        if (field === null || field === "") {
-          console.log("necessaryOne middleware");
-          return next(Selector.BAD_INPUT);
-        }
-      }
-    }
-
     next();
   };
+};
+
+export const Register = (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (typeof password !== "string" || password.length < 8) {
+    console.log("Register middleware");
+    return next(Selector.BAD_INPUT);
+  }
+
+  next();
+};
+
+export const removeEmptyMultipartFields = (req, res, next) => {
+  for (const key in req.body) {
+    if (req.body[key] === "") {
+      delete req.body[key];
+    }
+  }
+
+  next();
 };
