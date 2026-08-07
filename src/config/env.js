@@ -1,6 +1,18 @@
 // Chequeo de variables obligatorias de .env (Propuesto por ChatGPT)
 import "dotenv/config";
 
+// Parse CORS_ORIGINS: string separado por comas o array
+let corsOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
+
+if (process.env.CORS_ORIGINS !== undefined && process.env.CORS_ORIGINS.trim() !== "") {
+  corsOrigins = process.env.CORS_ORIGINS.split(",").map((url) => url.trim());
+}
+
 // Variables obligatorias: si falta alguna, no tiene sentido levantar el server
 const REQUIRED_VARS = [
   "JWT_SECRET",
@@ -70,4 +82,5 @@ export const env = {
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+  CORS_ORIGINS: corsOrigins,
 };

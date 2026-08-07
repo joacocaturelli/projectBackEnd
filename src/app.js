@@ -16,6 +16,7 @@ import cartRoutes from "./routes/cart.routes.js";
 import orderRoutes from "./routes/orders.routes.js";
 
 import errorHandler from "./middlewares/errorHandler.middleware.js";
+import { env } from "./config/env.js";
 import { Selector } from "./utils/errors.utils.js";
 import { limiter } from "./utils/common.utils.js";
 
@@ -25,12 +26,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://127.0.0.1:3000",
-      "http://localhost:5173", //Frontend Vite
-      "http://127.0.0.1:5173",
-    ],
+    origin: [env.CORS_ORIGINS],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
