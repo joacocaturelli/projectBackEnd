@@ -14,7 +14,7 @@ export const limiter = rateLimit({
   max: 100,
   message: {
     ok: false,
-    error: { message: "Demasiadas peticiones, intentalo de nuevo en 1 minuto" },
+    error: "Demasiadas peticiones, intentalo de nuevo en 1 minuto",
   },
 });
 
@@ -24,7 +24,7 @@ export const authLimiter = rateLimit({
   max: 10,
   message: {
     ok: false,
-    error: { message: "Demasiadas peticiones, intentalo de nuevo en 15 minutos" },
+    error: "Demasiadas peticiones, intentalo de nuevo en 15 minutos",
   },
 });
 

@@ -39,6 +39,8 @@ const router = express.Router();
  *                   example: "User registered"
  *       400:
  *         $ref: "#/components/responses/BadInputError"
+ *       429:
+ *         $ref: "#/components/responses/TooManyRequests"
  *       500:
  *         $ref: "#/components/responses/ServerError"
  */
@@ -87,8 +89,12 @@ router.post(
  *                 data:
  *                   type: string
  *                   example: "Welcome"
- *       400:
+ *       403:
  *         $ref: "#/components/responses/WrongCredentialsError"
+ *       400:
+ *         $ref: "#/components/responses/BadInputError"
+ *       429:
+ *         $ref: "#/components/responses/TooManyRequests"
  *       500:
  *         $ref: "#/components/responses/ServerError"
  */
@@ -127,6 +133,10 @@ router.post(
  *                   example: "Sesion cerrada"
  *       401:
  *         $ref: "#/components/responses/NoTokenError"
+ *       429:
+ *         $ref: "#/components/responses/TooManyRequests"
+ *       500:
+ *         $ref: "#/components/responses/ServerError"
  */
 router.post("/logout", authMiddleware, authController.logout);
 

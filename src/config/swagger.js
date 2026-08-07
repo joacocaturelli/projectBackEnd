@@ -194,22 +194,18 @@ export const swaggerSpec = swaggerJSDoc({
           type: "object",
           required: ["email", "password"],
           properties: {
-            email: { type: "string", example: "admin@test.com" },
-            password: { type: "string", example: "123456" },
+            email: { type: "string", example: "user@swagger.com" },
+            password: { type: "string", example: "12345678" },
           },
         },
 
         AuthRegister: {
           type: "object",
-          required: ["email", "password"],
+          required: ["email", "password", "name"],
           properties: {
-            email: { type: "string", example: "test@mail.com" },
-            password: { type: "string", example: "123456" },
-            role: {
-              type: "string",
-              enum: ["USER", "ADMIN"],
-              example: "USER",
-            },
+            email: { type: "string", example: "user@swagger.com" },
+            password: { type: "string", example: "12345678" },
+            name: { type: "string", example: "SwaggerUser21" },
           },
         },
 
@@ -301,6 +297,15 @@ export const swaggerSpec = swaggerJSDoc({
             },
           },
         },
+
+        ErrorResponse: {
+          type: "object",
+          required: ["ok", "error"],
+          properties: {
+            ok: { type: "boolean", example: false },
+            error: { type: "string", example: "something went wrong" },
+          },
+        },
       },
 
       // =====================
@@ -380,6 +385,20 @@ export const swaggerSpec = swaggerJSDoc({
             "application/json": {
               schema: { $ref: "#/components/schemas/ErrorResponse" },
               example: { ok: false, error: "resource already exists" },
+            },
+          },
+        },
+
+        // 429 - TOO_MANY_REQUESTS
+        TooManyRequests: {
+          description: "Demasiadas peticiones",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/ErrorResponse" },
+              example: {
+                ok: false,
+                error: "Demasiadas peticiones, intentalo de nuevo en 15 minutos",
+              },
             },
           },
         },
