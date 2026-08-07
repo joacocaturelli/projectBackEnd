@@ -102,11 +102,11 @@ router.get("/:cartId", authMiddleware, cartController.getCartById);
  *             properties:
  *               productId:
  *                 type: string
- *                 example: "3"
+ *                 example: "f99f9e94-767b-4bd2-aae2-b2ea09702b52"
  *                 description: ID del producto (requerido)
  *               quantity:
  *                 type: integer
- *                 example: 2
+ *                 example: 1
  *                 description: Cantidad a añadir (opcional, default 1)
  *     responses:
  *       201:
