@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client";
 // Obtenemos el carrito active del user y si no tiene se lo creamos
 export const getCart = async (userId) => {
   try {
-    let result = await prisma.cart.findUnique({
+    let result = await prisma.cart.findFirst({
       where: { userId, status: "ACTIVE" },
       include: { items: { include: { product: true } } },
     });
@@ -72,7 +72,7 @@ export const addItem = async (userId, productId, quantity = 1) => {
     const cart = cartResult.content;
 
     // Comprobar si existe el producto en el carrito
-    const existingItem = await prisma.cartItem.findUnique({
+    const existingItem = await prisma.cartItem.findFirst({
       where: { cartId: cart.id, productId },
     });
 
@@ -162,7 +162,7 @@ export const checkOut = async (userId) => {
     // cancelando todas las peticiones
     await prisma.$transaction(async (tx) => {
       // Buscamos el carrito activo
-      const cart = await tx.cart.findUnique({
+      const cart = await tx.cart.findFirst({
         where: {
           userId,
           status: "ACTIVE",
