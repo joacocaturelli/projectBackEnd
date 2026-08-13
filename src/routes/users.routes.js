@@ -8,7 +8,7 @@ const router = express.Router();
 
 /**
  * @openapi
- * /api/users/profile:
+ * /api/users/me:
  *   get:
  *     summary: Obtener perfil del usuario autenticado
  *     description: >
@@ -35,7 +35,7 @@ const router = express.Router();
  *       404:
  *         $ref: "#/components/responses/NotFoundError"
  */
-router.get("/profile", authMiddleware, userControllers.getProfile);
+router.get("/me", authMiddleware, userControllers.getProfile);
 
 /**
  * @openapi
