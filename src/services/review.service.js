@@ -106,7 +106,7 @@ export const updateReview = async (userId, productId, data) => {
       updateData.rating = data.rating;
     }
 
-    if (data.comment !== undefined) {
+    if (data.comment !== undefined && data.comment !== "") {
       updateData.comment = data.comment;
     }
 
