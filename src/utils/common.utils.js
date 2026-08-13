@@ -6,6 +6,7 @@ export const cookieOptions = {
   httpOnly: true,
   secure: env.NODE_ENV === "production",
   maxAge: 3_600_000, // 1 hora
+  sameSite: "lax",
 };
 
 // Limitamos las peticiones a 100 por minuto
