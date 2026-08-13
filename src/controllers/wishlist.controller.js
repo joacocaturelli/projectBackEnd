@@ -15,7 +15,7 @@ export const getWishlistByUser = async (req, res, next) => {
 };
 
 export const addToWishlist = async (req, res, next) => {
-  const productId = req.params.productId;
+  const { productId } = req.body;
   const { id } = res.locals;
 
   const result = await wishlistService.addToWishlist(id, productId);
@@ -30,7 +30,7 @@ export const addToWishlist = async (req, res, next) => {
 };
 
 export const removeFromWishlist = async (req, res, next) => {
-  const { productId } = req.params;
+  const { productId } = req.body;
   const { id } = res.locals;
 
   const result = await wishlistService.removeFromWishlist(id, productId);

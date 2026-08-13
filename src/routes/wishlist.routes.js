@@ -42,7 +42,7 @@ router.get("/", authMiddleware, wishListController.getWishlistByUser);
 
 /**
  * @openapi
- * /api/wishlist/add/{productId}:
+ * /api/wishlist/items:
  *   post:
  *     summary: Añadir un producto a la wishlist
  *     description: >
@@ -85,11 +85,11 @@ router.get("/", authMiddleware, wishListController.getWishlistByUser);
  *       500:
  *         $ref: "#/components/responses/ServerError"
  */
-router.post("/add/:productId", authMiddleware, wishListController.addToWishlist);
+router.post("/items", authMiddleware, wishListController.addToWishlist);
 
 /**
  * @openapi
- * /api/wishlist/{productId}:
+ * /api/wishlist/items:
  *   delete:
  *     summary: Eliminar un producto de la wishlist
  *     description: >
@@ -127,6 +127,6 @@ router.post("/add/:productId", authMiddleware, wishListController.addToWishlist)
  *       500:
  *         $ref: "#/components/responses/ServerError"
  */
-router.delete("/:productId", authMiddleware, wishListController.removeFromWishlist);
+router.delete("/items", authMiddleware, wishListController.removeFromWishlist);
 
 export default router;
