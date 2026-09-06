@@ -1,12 +1,11 @@
 import rateLimit from "express-rate-limit";
-import prisma from "../config/prismaClient.js";
 import { env } from "../config/env.js";
 
 export const cookieOptions = {
   httpOnly: true,
   secure: env.NODE_ENV === "production",
   maxAge: 3_600_000, // 1 hora
-  sameSite: "lax",
+  sameSite: env.NODE_ENV === "production" ? "none" : "lax",
 };
 
 // Limitamos las peticiones a 100 por minuto
