@@ -7,5 +7,5 @@ connectMongo();
 
 app.listen(env.PORT, () => {
   //Hacemos que la app escuche al puerto
-  console.log(`Server running on http://localhost:${env.PORT}`);
+  console.log(`Server running on port ${env.PORT}`);
 });
