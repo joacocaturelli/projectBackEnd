@@ -1,4 +1,3 @@
-import prisma from "../config/prismaClient.js";
 import { Selector } from "../utils/errors.utils.js";
 
 export const obligatory = (fields) => {

@@ -1,4 +1,3 @@
-import prisma from "../config/prismaClient.js";
 import * as authService from "../services/auth.service.js";
 import { cookieOptions } from "../utils/common.utils.js";
 import { Selector } from "../utils/errors.utils.js";
